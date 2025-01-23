@@ -1,1 +1,11 @@
-bababababa
+{% extends "base.html" %}
+
+{% block head %}
+  {% include "htmx.html" %}
+{% endblock %}
+
+{% block body %}
+<div hx-get="/woah" hx-target="this" hx-trigger="load" hx-swap="innerText">
+	NOT woah.
+</div>
+{% endblock %}
