@@ -12,11 +12,13 @@ async fn main() {
 
     let root = warp::path::end().then(routes::index::page);
     let r#static = warp::path("static").and(warp::fs::dir("static"));
-    let woah = warp::path("woah").map(|| "bwahh :3");
+    let blog = warp::path("blog")
+        .and(warp::path::param())
+        .and_then(routes::blog::page);
 
     let routes = root
         .or(r#static)
-        .or(woah)
+        .or(blog)
         .recover(routes::rejections::handle);
 
     let host = SocketAddr::from(([0, 0, 0, 0], ARGS.port));
