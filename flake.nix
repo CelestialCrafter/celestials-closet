@@ -10,6 +10,8 @@
           rustc
           cargo
           jujutsu
+          pkg-config
+          openssl
         ];
       };
     };
