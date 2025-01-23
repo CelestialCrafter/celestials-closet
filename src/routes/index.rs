@@ -1,5 +1,4 @@
 use askama_warp::Template;
-use grass::include;
 use warp::reply::Reply;
 
 #[derive(Template)]
@@ -10,6 +9,6 @@ struct IndexTemplate<'a> {
 
 pub async fn page() -> impl Reply {
     IndexTemplate {
-        css: include!("styles/index.scss"),
+        css: grass::include!("styles/index.scss"),
     }
 }
