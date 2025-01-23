@@ -1,4 +1,5 @@
 use askama_warp::Template;
+use log::info;
 use warp::reply::Reply;
 
 #[derive(Template)]
@@ -6,5 +7,6 @@ use warp::reply::Reply;
 struct IndexTemplate {}
 
 pub async fn page() -> impl Reply {
+    info!("babaaa");
     IndexTemplate {}
 }
