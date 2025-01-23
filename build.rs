@@ -6,6 +6,10 @@ use pulldown_cmark::{Options, Parser};
 
 const BLOGS_DIR: &str = "blogs";
 
+fn escape(input: &str) -> String {
+    Literal::string(input).to_string()
+}
+
 fn main() -> Result<()> {
     println!("cargo::rerun-if-changed={}", BLOGS_DIR);
 
@@ -30,10 +34,13 @@ fn main() -> Result<()> {
             .to_str()
             .ok_or(eyre!("file stem not utf-8"))?;
 
+        let path = blog.to_str().ok_or(eyre!("path not utf-8"))?;
+
         map_entries.push(format!(
-            "map.insert(\"{}\", {});",
-            name,
-            Literal::string(&output).to_string()
+            "map.insert({}, ({}, {}));",
+            escape(name),
+            escape(path),
+            escape(output.as_str())
         ));
     }
 
@@ -43,7 +50,7 @@ fn main() -> Result<()> {
         format!(
             "use std::{{sync::LazyLock, collections::HashMap}};
 
-            static BLOGS: LazyLock<HashMap<&str, &str>> = LazyLock::new(|| {{
+            static BLOGS: LazyLock<HashMap<&str, (&str, &str)>> = LazyLock::new(|| {{
                 let mut map = HashMap::new();
                 {}
                 map
