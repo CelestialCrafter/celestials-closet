@@ -4,9 +4,6 @@ version = "0.1.0"
 edition = "2021"
 build = "build.rs"
 
-[profile.dev.package.askama_derive]
-opt-level = 3
-
 [build-dependencies]
 eyre = "0.6.12"
 proc-macro2 = "1.0.93"

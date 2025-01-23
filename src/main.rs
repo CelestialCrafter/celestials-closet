@@ -1,4 +1,5 @@
 pub mod args;
+pub mod errors;
 pub mod routes;
 
 use std::net::SocketAddr;

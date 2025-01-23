@@ -2,4 +2,6 @@
 
 {% block body %}
 {{ data|safe }}
+<br>
+latest rev: timestamp {{revision.timestamp}}, jj {{revision.jj}}, git {{revision.git}}
 {% endblock %}
