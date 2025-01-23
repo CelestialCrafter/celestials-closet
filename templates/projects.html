@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block body %}
+<ul>
+	{% for repo in repos.iter() %}
+	<li>
+		<a href="{{ repo.url }}">{{ repo.name }}</a>
+		<span>{{ repo.language.clone().unwrap_or_default() }}</span>
+		<span>{{ repo.stars }}</span>
+	</li>
+	{% endfor %}
+</ul>
+{% endblock %}
