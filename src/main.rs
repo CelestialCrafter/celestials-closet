@@ -1,11 +1,18 @@
+pub mod args;
+pub mod routes;
+
+use std::net::SocketAddr;
+
 use args::ARGS;
 use warp::Filter;
 
-pub mod args;
-
 #[tokio::main]
 async fn main() {
-    let root = warp::path::end().map(|| "hai :3");
+    pretty_env_logger::init();
 
-    warp::serve(root).run(([0, 0, 0, 0], ARGS.port)).await;
+    let root = warp::get().then(routes::index::page);
+    let routes = root.recover(routes::rejections::handle);
+
+    let host = SocketAddr::from(([0, 0, 0, 0], ARGS.port));
+    warp::serve(routes).run(host).await;
 }
