@@ -1,12 +1,15 @@
 use askama_warp::Template;
-use log::info;
+use grass::include;
 use warp::reply::Reply;
 
 #[derive(Template)]
 #[template(path = "index.html")]
-struct IndexTemplate {}
+struct IndexTemplate<'a> {
+    css: &'a str,
+}
 
 pub async fn page() -> impl Reply {
-    info!("babaaa");
-    IndexTemplate {}
+    IndexTemplate {
+        css: include!("styles/index.scss"),
+    }
 }
