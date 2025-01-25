@@ -1,2 +1,9 @@
 @use "modern-normalize";
 @use "typography";
+@use "colors";
+@use "sizes";
+
+body {
+  background-color: colors.$base;
+  padding: sizes.$spacing-m;
+}
