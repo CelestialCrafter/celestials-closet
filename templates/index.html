@@ -1,11 +1,43 @@
 {% extends "base.html" %}
 
 {% block head %}
-  {% include "htmx.html" %}
+  {% include "oneko.html" %}
 {% endblock %}
 
 {% block body %}
-<p hx-get="/woah" hx-target="this" hx-trigger="load" hx-swap="innerText">
-	NOT woah.
-</p>
+   <div class="info">
+     <img src="https://github.com/CelestialCrafter.png" alt="Celestial's Profile">
+     <h2>Celestial</h2>
+     <h3>Software Engineer</h3>
+   </div>
+
+   <br>
+
+   <div class="cards">
+    <div class="card about">
+      <h2>About me</h2>
+      <p>bawdabwbabababa ??? wawaw OAAUAUUU bawahhhh... lalanbabawdauwdbuawd RAHWUAHUBAUBABABAB wbbababaaa..... owaaawaaa??? lap bap bap bwop pwop plop lwop nanananya!!!!!!! bwourp lwourp mwourp gwourp .!!!,, maaaabaawaaabababbaabba hi!!!!</p>
+    </div>
+
+    <div class="card">
+      <h2>Socials</h2>
+      <div class="icon-set">
+        <a href="https://github.com/CelestialCrafter" target="_blank"><img src="/static/github.webp" alt="Github"></a>
+        <a href="https://www.reddit.com/user/CelestialCrafterMC/" target="_blank"><img src="/static/reddit.webp" alt="Reddit"></a>
+        <a href="https://open.spotify.com/user/y9uke3eehk45lbbpky3z3agwx?si=bc1b68ab1a44494c" target="_blank"><img src="/static/spotify.webp" alt="Spotify"></a>
+        <a href="https://www.youtube.com/@celestialcrafter9931" target="_blank"><img src="/static/youtube.webp" alt="Youtube"></a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Languages</h2>
+      <div class="icon-set">
+        <a href="https://nodejs.org"><img src="/static/javascript.webp" alt="Node.js"></a>
+        <a href=""><img src="/static/python.webp" alt="Python"></a>
+        <a href=""><img src="/static/rust.webp" alt="Rust"></a>
+        <a href=""><img src="/static/go.webp" alt="Go"></a>
+        <a href="https://www.lua.org"><img src="/static/lua.webp" alt="Lua"></a>
+      </div>
+    </div>
+   </div>
 {% endblock %}
