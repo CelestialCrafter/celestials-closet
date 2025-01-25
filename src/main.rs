@@ -21,8 +21,15 @@ async fn main() {
             "text/css",
         )
     });
+    let oneko = warp::path("oneko.css").map(|| {
+        warp::reply::with_header(
+            grass::include!("styles/oneko.scss"),
+            "Content-Type",
+            "text/css",
+        )
+    });
 
-    let special = r#static.or(base);
+    let special = r#static.or(base).or(oneko);
 
     // pages
     let index = warp::path::end().then(routes::index::page);
