@@ -11,6 +11,7 @@ const GITHUB_USERNAME: &str = "CelestialCrafter";
 #[derive(Debug, Deserialize, Clone)]
 pub struct Repository {
     name: String,
+    description: Option<String>,
     #[serde(rename(deserialize = "html_url"))]
     url: String,
     language: Option<String>,
