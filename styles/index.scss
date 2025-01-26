@@ -1,5 +1,6 @@
 @use "colors";
 @use "sizes";
+@use "util";
 
 .info {
   text-align: center;
@@ -23,19 +24,7 @@
   gap: sizes.$spacing-m;
 
   .card {
-    padding: sizes.$spacing-m;
-    border-radius: sizes.$spacing-s;
-    background-color: colors.$surface;
-    width: fit-content;
-
-    h2 {
-      background-color: colors.$overlay;
-      border-radius: sizes.$spacing-s;
-      padding: sizes.$spacing-s sizes.$spacing-m;
-      margin-bottom: sizes.$spacing-s;
-      width: fit-content;
-      height: fit-content;
-    }
+    @include util.card("h2");
   }
 }
 
@@ -50,6 +39,5 @@
   img {
     width: 4rem;
     aspect-ratio: 1/1;
-    // border-radius: 50%;
   }
 }
