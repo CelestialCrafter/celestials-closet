@@ -1,13 +1,20 @@
 {% extends "base.html" %}
 
 {% block body %}
-<ul>
+<div class="projects">
 	{% for repo in repos.iter() %}
-	<li>
-		<a href="{{ repo.url }}">{{ repo.name }}</a>
-		<span>{{ repo.language.clone().unwrap_or_default() }}</span>
-		<span>{{ repo.stars }}</span>
-	</li>
+	{% let language = repo.language.clone().unwrap_or("Unknown".to_string()) %}
+	<div class="project">
+		<a href="{{ repo.url }}">
+			<h2>{{ repo.name }}<img src="/static/{{ language|lower }}.webp" alt="​" onerror="this.style.display='none'"></h2>
+		</a>
+		<ul class="info">
+			<li>{{ language }}</li>
+			<li><span>{{ repo.stars }} stars</span></li>
+		</ul>
+		<br>
+		<p>{{ repo.description.clone().unwrap_or_default() }}</p>
+	</div>
 	{% endfor %}
-</ul>
+</div>
 {% endblock %}

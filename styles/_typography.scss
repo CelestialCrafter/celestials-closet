@@ -25,7 +25,17 @@ code {
 
 p {
   color: colors.$text-subtle;
-  margin: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+small,
+sub,
+sup {
+  color: colors.$text-muted;
+  font-size: 0.75em;
 }
 
 h1,
@@ -35,7 +45,6 @@ h4,
 h5,
 h6 {
   font-weight: bold;
-  margin: 0;
 }
 
 h1 {
@@ -62,13 +71,13 @@ h6 {
   font-size: 1em
 }
 
-small,
-sub,
-sup {
-  color: colors.$text-muted;
-  font-size: 0.75em;
-}
-
-a {
-  text-decoration: none;
+ul,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
 }
