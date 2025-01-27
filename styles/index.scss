@@ -25,6 +25,7 @@
 
   .card {
     @include util.card("h2");
+    width: initial;
   }
 }
 

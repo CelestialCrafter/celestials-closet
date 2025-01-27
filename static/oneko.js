@@ -94,12 +94,6 @@ const animate = (timestamp) => {
 window.requestAnimationFrame(animate);
 
 const oneko = () => {
-  const isReducedMotion =
-    window.matchMedia(`(prefers-reduced-motion: reduce)`) === true ||
-    window.matchMedia(`(prefers-reduced-motion: reduce)`).matches === true;
-
-  if (isReducedMotion) return;
-
   const nekoEl = document.createElement("div");
 
   let nekoPosX = 32;
