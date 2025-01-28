@@ -7,3 +7,9 @@ body {
   background-color: colors.$base;
   padding: sizes.$spacing-m;
 }
+
+nav {
+  display: flex;
+  gap: sizes.$spacing-m;
+  margin-bottom: 1rem;
+}
