@@ -1,12 +1,16 @@
 {% extends "base.html" %}
 
+{% block head %}
+<style>{{grass::include!("styles/projects.scss")}}</style>
+{% endblock %}
+
 {% block body %}
 <div class="projects">
 	{% for repo in repos.iter() %}
 	{% let language = repo.language.clone().unwrap_or("Unknown".to_string()) %}
 	<div class="project">
 		<a href="{{ repo.url }}">
-			<h2>{{ repo.name }}<img src="/static/{{ language|lower }}.webp" alt="​" onerror="this.style.display='none'"></h2>
+			<h2>{{ repo.name }}<img src="/assets/{{ language|lower }}.webp" alt="​" onerror="this.style.display='none'"></h2>
 		</a>
 		<ul class="info">
 			<li>{{ language }}</li>

@@ -1,4 +1,5 @@
 pub mod args;
+pub mod assets;
 pub mod errors;
 pub mod routes;
 
@@ -8,30 +9,19 @@ use args::ARGS;
 use log::error;
 use warp::Filter;
 
+fn logging() {
+    let mut builder = pretty_env_logger::formatted_builder();
+    match &ARGS.log {
+        Some(filter) => builder.parse_filters(filter.as_str()),
+        None => &mut builder,
+    }
+    .init();
+}
+
 #[tokio::main]
 async fn main() {
-    pretty_env_logger::init();
+    logging();
 
-    // special
-    let r#static = warp::path("static").and(warp::fs::dir("static"));
-    let base = warp::path("base.css").map(|| {
-        warp::reply::with_header(
-            grass::include!("styles/base.scss"),
-            "Content-Type",
-            "text/css",
-        )
-    });
-    let oneko = warp::path("oneko.css").map(|| {
-        warp::reply::with_header(
-            grass::include!("styles/oneko.scss"),
-            "Content-Type",
-            "text/css",
-        )
-    });
-
-    let special = r#static.or(base).or(oneko);
-
-    // pages
     let index = warp::path::end().then(routes::index::page);
     let blog = warp::path("blog")
         .and(warp::path::param())
@@ -52,9 +42,19 @@ async fn main() {
     };
 
     let pages = index.or(blog).or(projects);
+    let assets = warp::path("assets")
+        .and(warp::fs::dir("assets"))
+        .map(|reply| {
+            warp::reply::with_header(
+                reply,
+                "Cache-Control",
+                format!("max-age={}", 60 * 60 * 24 * 7),
+            )
+        });
+
+    let routes = assets.or(pages).recover(routes::rejections::handle);
 
     // serve
-    let routes = special.or(pages).recover(routes::rejections::handle);
     let host = SocketAddr::from(([0, 0, 0, 0], ARGS.port));
     warp::serve(routes).run(host).await;
 }

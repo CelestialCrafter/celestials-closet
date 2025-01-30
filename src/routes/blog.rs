@@ -22,7 +22,6 @@ struct Revision {
 struct BlogTemplate<'a> {
     data: &'a str,
     revision: Revision,
-    css: &'a str,
 }
 
 // gross but adding jj_lib makes the build time so long
@@ -81,7 +80,6 @@ pub async fn page(name: String) -> Result<impl Reply, Rejection> {
         Some((path, content)) => Ok(BlogTemplate {
             data: content,
             revision: generate_revision(path).map_err(|err| reject::custom(Failed(err)))?,
-            css: grass::include!("styles/blog.scss"),
         }),
         None => Err(reject::not_found()),
     }
