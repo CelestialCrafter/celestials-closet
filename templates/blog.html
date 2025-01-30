@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 
+{% block head %}
+<style>{{grass::include!("styles/blog.scss")}}</style>
+{% endblock %}
+
 {% block body %}
 {{ data|safe }}
 <br>
-latest rev: timestamp {{revision.timestamp}}, jj {{revision.jj}}, git {{revision.git}}
+<span>latest rev: timestamp {{revision.timestamp}}, jj {{revision.jj}}, git {{revision.git}}</span>
 {% endblock %}
