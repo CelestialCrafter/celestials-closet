@@ -39,14 +39,10 @@ pub async fn repositories() -> Result<Vec<Repository>> {
 
 #[derive(Template)]
 #[template(path = "projects.html")]
-struct ProjectsTemplate<'a> {
-    css: &'a str,
+struct ProjectsTemplate {
     repos: Arc<Vec<Repository>>,
 }
 
 pub async fn page(repos: Arc<Vec<Repository>>) -> impl Reply {
-    ProjectsTemplate {
-        css: grass::include!("styles/projects.scss"),
-        repos,
-    }
+    ProjectsTemplate { repos }
 }
