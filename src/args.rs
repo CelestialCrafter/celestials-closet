@@ -5,6 +5,7 @@ use pico_args::Arguments;
 
 pub struct Args {
     pub port: u16,
+    pub log: Option<String>,
 }
 
 pub static ARGS: LazyLock<Args> =
@@ -15,5 +16,6 @@ fn parse_args() -> Result<Args> {
 
     Ok(Args {
         port: args.opt_value_from_str("--port")?.unwrap_or(8080),
+        log: args.opt_value_from_str("--log")?,
     })
 }
