@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block body %}
+{{ blog.html|safe }}
+<br>
+<span>latest rev: timestamp {{blog.revision.timestamp}}, change id {{blog.revision.change}}</span>
+{% endblock %}

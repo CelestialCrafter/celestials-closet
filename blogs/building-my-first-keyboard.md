@@ -1,5 +1,7 @@
 # building my first keyboard!
 
+summary
+
 ## table of contents
 
 - components
