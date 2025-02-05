@@ -6,6 +6,7 @@
   border-radius: sizes.$rounding;
   background-color: colors.$surface;
   width: fit-content;
+  overflow: hidden;
 
   #{$title} {
     background-color: colors.$overlay;
