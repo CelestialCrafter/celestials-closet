@@ -1,7 +1,14 @@
 {% extends "base.html" %}
 
+{% block head %}
+	<title>Celestial's Closet - {{ blog.title }}</title>
+	<meta name="description" content={{ blog.summary }}>
+{% endblock %}
+
 {% block body %}
-{{ blog.html|safe }}
-<br>
-<span>latest rev: timestamp {{blog.revision.timestamp}}, change id {{blog.revision.change}}</span>
+	{{ blog.html|safe }}
+
+	<br>
+
+	<span>latest rev: timestamp {{blog.revision.timestamp}}, change id {{blog.revision.change}}</span>
 {% endblock %}
