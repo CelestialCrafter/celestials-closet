@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block head %}
+	<title>Celestial's Closet - Projects</title>
+	{% call super() %}
+{% endblock %}
+
+{% block body %}
+	<h1>Projects</h1>
+	<br>
+	<div>
+		{% for project in projects %}
+		<div>
+			<a href="{{project.url}}"><h2>{{project.title}}</h2></a>
+			<p>{{project.description}}</p>
+		</div>
+		<br>
+		{% endfor %}
+	</div>
+{% endblock %}
