@@ -22,15 +22,15 @@ async fn main() {
     logging();
 
     let index = warp::path::end().then(routes::index::page);
+    let projects = warp::path("projects").then(routes::projects::page);
     let blog = warp::path("blog")
         .and(warp::path::end())
         .then(routes::blog::page);
-
-    let blog_post = warp::path("blog")
+    let blog = blog.or(warp::path("blog")
         .and(warp::path::param())
-        .and_then(routes::blog::post_page);
+        .and_then(routes::blog::post_page));
 
-    let pages = index.or(blog).or(blog_post);
+    let pages = index.or(projects).or(blog);
     let assets = warp::path("assets")
         .and(warp::fs::dir("assets"))
         .map(|reply| {
