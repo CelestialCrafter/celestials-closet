@@ -25,6 +25,7 @@
 
   .extra {
     display: flex;
+    flex-wrap: wrap;
     gap: sizes.$spacing-m;
   }
 
@@ -40,6 +41,7 @@
 
 .icon-set {
   display: flex;
+  flex-wrap: wrap;
   gap: sizes.$spacing-s;
 
   img {

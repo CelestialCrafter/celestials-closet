@@ -2,14 +2,15 @@
 <html lang="en">
 
 <head>
-	<title>Celestial's Closet</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="my website!! <3">
 
 	<style>{{grass::include!("styles/base.scss")}}</style>
 	{% include "oneko.html" %}
-	{% block head %}{% endblock %}
+	{% block head %}
+	<title>Celestial's Closet</title>
+	<meta name="description" content="my website!! <3">
+	{% endblock %}
 </head>
 
 <body>
