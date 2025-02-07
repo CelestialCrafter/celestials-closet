@@ -22,9 +22,9 @@ summary for markdown test blah blah blah
 
 ## blockquotes
 
-> 1
->> 2
->>> 3
+> level 1
+>> level 2
+>>> level 3
 
 ## lists
 
@@ -37,10 +37,10 @@ summary for markdown test blah blah blah
 
 ### ordered
 
-1. 1
-2. 2
-3. 3
-4. 4
+1. e
+2. f
+3. g
+4. h
 
 ## code
 
@@ -57,7 +57,7 @@ console.log(syntax());
 
 ## table
 
-| col 1 | col 2 |
+| c1    | c2    |
 | ----- | ----- |
 | c1r1  | c2r1  |
 | c1r2  | c2r2  |
@@ -72,13 +72,3 @@ console.log(syntax());
 ## images
 
 ![favicon](/favicon.ico)
-
-## html
-
-<details>
-    details
-    <summary>summary</summary>
-</details>
-
-<!-- @TODO do more stuff -->
-
