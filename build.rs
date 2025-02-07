@@ -1,8 +1,14 @@
-use std::{env, fs, path::Path, process::Command};
+use std::{
+    env,
+    fs::{self},
+    path::{Path, PathBuf},
+    process::Command,
+};
 
 use eyre::{eyre, Result};
 use proc_macro2::Literal;
 use pulldown_cmark::{Options, Parser};
+use walkdir::WalkDir;
 
 const BLOGS_DIR: &str = "blogs";
 const ASSETS_DIR: &str = "assets";
@@ -167,20 +173,25 @@ fn assets() -> Result<()> {
     println!("cargo::rerun-if-changed={}", ASSETS_DIR);
 
     let assets_path = env::current_dir()?.join(ASSETS_DIR);
-    let entries = fs::read_dir(assets_path.clone())?
+    let entries = WalkDir::new(assets_path.clone())
         .into_iter()
         .map(|entry| {
-            let path = entry?.path();
+            let path = entry?;
             let name = path
                 .file_name()
-                .ok_or(eyre!("no file name on path"))?
                 .to_str()
                 .ok_or(eyre!("file name is not utf-8"))?;
 
+            Ok((escape(name), path.path().to_path_buf()))
+        })
+        .collect::<Result<Vec<(String, PathBuf)>>>()?
+        .into_iter()
+        .filter(|(_, p)| p.is_file())
+        .map(|(name, path)| {
             Ok(format!(
                 "{}, {}.to_vec()",
-                escape(name),
-                Literal::byte_string(&fs::read(path.clone())?).to_string()
+                name,
+                Literal::byte_string(&fs::read(path)?).to_string()
             ))
         })
         .collect::<Result<Vec<String>>>()?;
