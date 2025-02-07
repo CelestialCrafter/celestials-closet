@@ -3,13 +3,54 @@
 @use "colors";
 @use "sizes";
 
+$small: 48rem;
+
 body {
+  display: grid;
+  gap: sizes.$spacing-m;
+
   background-color: colors.$base;
   padding: sizes.$spacing-m;
+
+  grid-template-areas: "nav" "main" "aside";
+
+  @media (min-width: $small) {
+    grid-template-areas: "nav nav" "aside main";
+    grid-template-columns: 18rem;
+  }
 }
 
 nav {
-  display: flex;
-  gap: sizes.$spacing-m;
-  margin-bottom: 1rem;
+  grid-area: nav;
+
+  a:first-child {
+    color: colors.$accent;
+  }
+}
+
+aside {
+  grid-area: aside;
+
+  border-radius: sizes.$rounding;
+  padding: sizes.$spacing-m 4rem;
+  background-color: colors.$surface;
+  text-align: center;
+
+  h2 {
+    color: colors.$accent;
+  }
+
+  img {
+    border-radius: 50%;
+    aspect-ratio: 1/1;
+    width: 8rem;
+  }
+}
+
+main {
+  grid-area: main;
+  border-radius: sizes.$rounding;
+  padding: sizes.$spacing-m;
+  background-color: colors.$surface;
+  max-width: $small;
 }
