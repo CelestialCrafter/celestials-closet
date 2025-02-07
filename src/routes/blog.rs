@@ -5,29 +5,29 @@ use warp::{
     reply::Reply,
 };
 
-include!(concat!(env!("OUT_DIR"), "/blogs.rs"));
+include!(concat!(env!("OUT_DIR"), "/posts.rs"));
 
 #[derive(Template)]
-#[template(path = "blog_post.html")]
-struct BlogPostTemplate<'a> {
-    blog: &'a Blog<'a>,
+#[template(path = "post.html")]
+struct PostTemplate<'a> {
+    post: &'a Post<'a>,
 }
 
 #[derive(Template)]
-#[template(path = "blog.html")]
-struct BlogTemplate<'a> {
-    posts: Vec<&'a Blog<'a>>,
+#[template(path = "posts.html")]
+struct PostsTemplate<'a> {
+    posts: Vec<&'a Post<'a>>,
 }
 
 pub async fn page() -> impl Reply {
-    BlogTemplate {
-        posts: BLOGS.values().collect(),
+    PostsTemplate {
+        posts: POSTS.values().collect(),
     }
 }
 
 pub async fn post_page(name: String) -> Result<impl Reply, Rejection> {
-    match BLOGS.get(name.as_str()) {
-        Some(blog) => Ok(BlogPostTemplate { blog }),
+    match POSTS.get(name.as_str()) {
+        Some(post) => Ok(PostTemplate { post }),
         None => Err(reject::not_found()),
     }
 }

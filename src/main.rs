@@ -23,14 +23,14 @@ async fn main() {
 
     let index = warp::path::end().then(routes::index::page);
     let projects = warp::path("projects").then(routes::projects::page);
-    let blog = warp::path("blog")
+    let posts = warp::path("blog")
         .and(warp::path::end())
         .then(routes::blog::page);
-    let blog = blog.or(warp::path("blog")
+    let post = posts.or(warp::path("blog")
         .and(warp::path::param())
         .and_then(routes::blog::post_page));
 
-    let pages = index.or(projects).or(blog);
+    let pages = index.or(projects).or(post);
     let assets = warp::path("assets")
         .and(warp::fs::dir("assets"))
         .map(|reply| {
@@ -41,7 +41,10 @@ async fn main() {
             )
         });
 
-    let routes = assets.or(pages).recover(routes::rejections::handle);
+    let routes = assets
+        .or(pages)
+        .recover(routes::rejections::handle)
+        .with(warp::filters::compression::brotli());
 
     // serve
     let host = SocketAddr::from(([0, 0, 0, 0], ARGS.port));

@@ -4,22 +4,35 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" href="/assets/profile.webp" />
 
-	<style>{{grass::include!("styles/base.scss")}}</style>
-	{% include "oneko.html" %}
+	<style>{{grass::include!("styles/base.scss")|safe}}</style>
 	{% block head %}
-	<title>Celestial's Closet</title>
+	<title>celestial's closet</title>
 	<meta name="description" content="my website!! <3">
 	{% endblock %}
 </head>
 
 <body>
 	<nav>
-		<a href="/">/home/</a>
-		<a href="/blog">/blog/</a>
-		<a href="/projects">/projects/</a>
+		<a href="/">celestials@closet</a>
+		<a href="/blog">~/blog</a>
+		<a href="/projects">~/projects</a>
 	</nav>
+
+	<aside>
+		<img src="/assets/profile.webp" alt="Celestial">
+		<h2>celestial</h2>
+		<div class="socials">
+			<a href="https://github.com/CelestialCrafter">github</a>
+			<a href="mailto:celestialcraftermc@gmail.com">email</a>
+			<a href="https://www.reddit.com/user/CelestialCrafterMC/">reddit</a>
+		</div>
+	</aside>
+
+	<main>
 	{% block body %}{% endblock %}
+	</main>
 </body>
 
 </html>

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>celestial's closet - {{ post.title }}</title>
+<meta name="description" content={{ post.summary }}>
+{% endblock %}
+
+{% block body %}
+{{ post.html|safe }}
+<br>
+<span>last update: {{post.revision.timestamp}}, change id: {{post.revision.change}}</span>
+{% endblock %}

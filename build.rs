@@ -10,7 +10,7 @@ use proc_macro2::Literal;
 use pulldown_cmark::{Options, Parser};
 use walkdir::WalkDir;
 
-const BLOGS_DIR: &str = "blogs";
+const POSTS_DIR: &str = "posts";
 const ASSETS_DIR: &str = "assets";
 
 fn escape(input: &str) -> String {
@@ -88,15 +88,15 @@ fn get_revision(path: &str) -> Result<(String, u64)> {
     Ok((change, timestamp))
 }
 
-fn blogs() -> Result<()> {
-    println!("cargo::rerun-if-changed={}", BLOGS_DIR);
+fn posts() -> Result<()> {
+    println!("cargo::rerun-if-changed={}", POSTS_DIR);
 
     let mut parser_opts = Options::empty();
     parser_opts.insert(Options::ENABLE_TABLES);
     parser_opts.insert(Options::ENABLE_STRIKETHROUGH);
     parser_opts.insert(Options::ENABLE_GFM);
 
-    let entries = fs::read_dir(env::current_dir()?.join(BLOGS_DIR))?
+    let entries = fs::read_dir(env::current_dir()?.join(POSTS_DIR))?
         .into_iter()
         .map(|entry| {
             let path = entry?.path();
@@ -125,7 +125,7 @@ fn blogs() -> Result<()> {
             let summary = lines.skip(1).next().unwrap_or_default();
 
             Ok(format!(
-                "{}, Blog {{
+                "{}, Post {{
                     id: {},
                     title: {},
                     summary: {},
@@ -147,10 +147,10 @@ fn blogs() -> Result<()> {
         .collect::<Result<Vec<String>>>()?;
 
     fs::write(
-        Path::new(&env::var("OUT_DIR")?).join("blogs.rs"),
+        Path::new(&env::var("OUT_DIR")?).join("posts.rs"),
         format!(
             "{}{}",
-            "struct Blog<'a> {
+            "struct Post<'a> {
                 title: &'a str,
                 id: &'a str,
                 summary: &'a str,
@@ -162,7 +162,7 @@ fn blogs() -> Result<()> {
                 change: &'a str,
                 timestamp: u64,
             }",
-            map("BLOGS", "&str, Blog", entries.into_iter())
+            map("POSTS", "&str, Post", entries.into_iter())
         ),
     )?;
 
@@ -205,7 +205,7 @@ fn assets() -> Result<()> {
 }
 
 fn main() -> Result<()> {
-    blogs()?;
+    posts()?;
     assets()?;
 
     Ok(())
