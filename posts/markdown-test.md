@@ -22,9 +22,9 @@ summary for markdown test blah blah blah
 
 ## blockquotes
 
-> 1
->> 2
->>> 3
+> level 1
+>> level 2
+>>> level 3
 
 ## lists
 
@@ -37,10 +37,10 @@ summary for markdown test blah blah blah
 
 ### ordered
 
-1. 1
-2. 2
-3. 3
-4. 4
+1. e
+2. f
+3. g
+4. h
 
 ## code
 
