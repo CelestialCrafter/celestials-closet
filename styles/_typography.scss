@@ -33,6 +33,11 @@ p {
 
 a {
   text-decoration: none;
+  color: colors.$link-unvisited;
+
+  &:visited {
+    color: colors.$link-visited;
+  }
 }
 
 small,
