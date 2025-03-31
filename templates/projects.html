@@ -2,6 +2,7 @@
 
 {% block head %}
 <title>celestial's closet - projects</title>
+<style>{{grass::include!("styles/projects.scss")|safe}}</style>
 {% call super() %}
 {% endblock %}
 
@@ -11,6 +12,13 @@
 <div>
 	<a href="{{project.url}}"><h2>{{project.title}}</h2></a>
 	<p>{{project.description}}</p>
+	{% if let Some(images) = project.images %}
+	<div class="gallery">
+	{% for image in images %}
+		<img src="{{image}}" />
+	{% endfor %}
+	</div>
+	{% endif %}
 </div>
 {% endfor %}
 {% endblock %}
