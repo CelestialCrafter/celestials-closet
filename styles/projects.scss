@@ -1,0 +1,12 @@
+@use "sizes";
+
+.gallery {
+  display: flex;
+  overflow: scroll;
+  gap: sizes.$spacing-m;
+
+  img {
+    border-radius: sizes.$rounding;
+    max-width: 33%;
+  }
+}

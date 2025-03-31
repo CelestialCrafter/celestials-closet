@@ -35,6 +35,7 @@ aside {
   padding: sizes.$spacing-m 4rem;
   background-color: colors.$surface;
   text-align: center;
+  height: fit-content;
 
   h2 {
     color: colors.$accent;
