@@ -1,0 +1,132 @@
+@use "colors";
+
+code {
+	.variable {
+		font-style: italic;
+	}
+	
+	.variable\.builtin {
+		color: colors.$love;
+		font-style: italic;
+		font-weight: bold;
+	}
+	
+	.variable\.member {
+		color: colors.$foam;
+	}
+	
+	.variable\.parameter {
+		color: colors.$iris;
+		font-style: italic;
+	}
+	
+	.constant {
+		color: colors.$gold;
+	}
+	
+	.constant\.builtin {
+		color: colors.$gold;
+		font-weight: bold;
+	}
+	
+	.string {
+		color: colors.$gold;
+	}
+	
+	.string\.escape {
+		color: colors.$pine;
+	}
+	
+	.string\.regexp {
+		color: colors.$iris;
+	}
+	
+	.string\.special {
+		color: colors.$gold;
+	}
+	
+	.boolean {
+		color: colors.$rose;
+	}
+	
+	.number {
+		color: colors.$gold;
+	}
+	
+	.type {
+		color: colors.$foam;
+	}
+	
+	.type\.builtin {
+		color: colors.$foam;
+		font-weight: bold;;
+	}
+	
+	.attribute {
+		color: colors.$iris;
+	}
+	
+	.property {
+		color: colors.$foam;
+		font-style: italic;
+	}
+	
+	.function {
+		color: colors.$rose;
+	}
+	
+	.function\.builtin {
+		color: colors.$rose;
+		font-weight: bold;
+	}
+	
+	.constructor {
+		color: colors.$gold;
+	}
+	
+	.operator {
+		color: colors.$subtle;
+	}
+	
+	.keyword {
+		color: colors.$pine;
+	}
+	
+	.punctuation {
+		color: colors.$subtle;
+	}
+	
+	.comment {
+		color: colors.$subtle;
+	}
+	
+	.markup\.bold {
+		font-weight: bold;
+	}
+	
+	.markup\.italic {
+		font-style: italic;
+	}
+	
+	.markup\.strikethrough {
+		text-decoration: line-through;
+	}
+	
+	.markup\.heading {
+		color: colors.$pine;
+		font-weight: bold;
+	}
+	
+	.markup\.link {
+		color: colors.$link-unvisited;
+		text-decoration: underline;
+	}
+	
+	.markup\.raw {
+		color: colors.$iris;
+	}
+	
+	.tag {
+		color: colors.$iris;
+	}
+}
