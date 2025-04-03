@@ -3,7 +3,12 @@
 @use "colors";
 @use "sizes";
 
-$small: 48rem;
+@mixin section {
+  border-radius: sizes.$rounding;
+  border: 0.15rem solid colors.$highlight;
+  background-color: colors.$surface;
+  padding: sizes.$spacing-l;
+}
 
 body {
   display: grid;
@@ -12,12 +17,7 @@ body {
   background-color: colors.$base;
   padding: sizes.$spacing-m;
 
-  grid-template-areas: "nav" "main" "aside";
-
-  @media (min-width: $small) {
-    grid-template-areas: "nav nav" "aside main";
-    grid-template-columns: 18rem;
-  }
+  grid-template-areas: "nav" "aside" "main";
 }
 
 nav {
@@ -31,9 +31,6 @@ nav {
 aside {
   grid-area: aside;
 
-  border-radius: sizes.$rounding;
-  padding: sizes.$spacing-m 4rem;
-  background-color: colors.$surface;
   text-align: center;
   height: fit-content;
 
@@ -44,14 +41,22 @@ aside {
   img {
     border-radius: 50%;
     aspect-ratio: 1/1;
-    width: 8rem;
+    width: calc(sizes.$spacing-l * 4);
   }
 }
 
 main {
   grid-area: main;
-  border-radius: sizes.$rounding;
-  padding: sizes.$spacing-m;
-  background-color: colors.$surface;
-  max-width: $small;
+  max-width: 48rem;
+}
+
+@media (min-width: 56rem) {
+  body {
+    grid-template-areas: "nav nav" "aside main";
+    grid-template-columns: 18rem;
+  }
+
+  main, aside {
+    @include section;
+  }
 }
