@@ -1,52 +1,57 @@
 pub mod args;
 pub mod assets;
-pub mod errors;
+pub mod database;
 pub mod routes;
 
-use std::net::SocketAddr;
+use std::{
+    fs::OpenOptions,
+    io::{Seek, SeekFrom},
+    net::SocketAddr,
+    sync::Arc,
+    time::Duration,
+};
 
 use args::ARGS;
-use warp::Filter;
+use database::Database;
+use log::warn;
+use tokio::task;
 
-fn logging() {
+#[tokio::main]
+async fn main() {
+    // logging
     let mut builder = pretty_env_logger::formatted_builder();
     match &ARGS.log {
         Some(filter) => builder.parse_filters(filter.as_str()),
         None => &mut builder,
     }
     .init();
-}
 
-#[tokio::main]
-async fn main() {
-    logging();
+    // database
+    let mut db_file = OpenOptions::new()
+        .write(true)
+        .read(true)
+        .create(true)
+        .open("database.db")
+        .expect("should be able to open database file");
+    let db = Arc::new(Database::new(&mut db_file).expect("should be able to create database"));
 
-    let index = warp::path::end().then(routes::index::page);
-    let projects = warp::path("projects").then(routes::projects::page);
-    let posts = warp::path("blog")
-        .and(warp::path::end())
-        .then(routes::blog::page);
-    let post = posts.or(warp::path("blog")
-        .and(warp::path::param())
-        .and_then(routes::blog::post_page));
+    {
+        let db = db.clone();
+        task::spawn(async move {
+            loop {
+                if let Err(err) = db_file
+                    .seek(SeekFrom::Start(0))
+                    .and_then(|_| Ok(db.save(&mut db_file)))
+                {
+                    warn!("could not save database: {err}")
+                }
 
-    let pages = index.or(projects).or(post);
-    let assets = warp::path("assets")
-        .and(warp::fs::dir("assets"))
-        .map(|reply| {
-            warp::reply::with_header(
-                reply,
-                "Cache-Control",
-                format!("max-age={}", 60 * 60 * 24 * 7),
-            )
+                tokio::time::sleep(Duration::from_secs(10)).await;
+            }
         });
-
-    let routes = assets
-        .or(pages)
-        .recover(routes::rejections::handle)
-        .with(warp::filters::compression::brotli());
+    }
 
     // serve
     let host = SocketAddr::from(([0, 0, 0, 0], ARGS.port));
-    warp::serve(routes).run(host).await;
+    warp::serve(routes::routes(db)).run(host).await;
 }
