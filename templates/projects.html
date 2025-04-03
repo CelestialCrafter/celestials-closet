@@ -1,22 +1,25 @@
 {% extends "base.html" %}
 
 {% block head %}
-<title>celestial's closet - projects</title>
+{% include "oneko.html" %}
+<title>cel's closet - projects</title>
 <style>{{grass::include!("styles/projects.scss")|safe}}</style>
 {% call super() %}
 {% endblock %}
 
 {% block body %}
+
 <h1>projects</h1>
 {% for project in projects %}
 <div>
 	<a href="{{project.url}}"><h2>{{project.title}}</h2></a>
 	<p>{{project.description}}</p>
+	<small>made w/ {{format!("{}", project.language)}}</small>
 	{% if let Some(images) = project.images %}
 	<div class="gallery">
-	{% for image in images %}
+		{% for image in images %}
 		<img src="{{image}}" />
-	{% endfor %}
+		{% endfor %}
 	</div>
 	{% endif %}
 </div>
