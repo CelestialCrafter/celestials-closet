@@ -1,4 +1,4 @@
-// @TODO make my own color palette
+// rose pine
 
 $base: #191724;
 $surface: #1f1d2e;
@@ -7,9 +7,16 @@ $muted: #6e6a86;
 $highlight: #524f67;
 
 $text: #e0def4;
-$text-subtle: #908caa;
+$subtle: #908caa;
 
-$accent: #ebbcba;
+$love: #eb6f92;
+$gold: #f6c177;
+$rose: #ebbcba;
+$pine: #31748f;
+$foam: #9ccfd8;
+$iris: #c4a7e7;
 
-$link-visited: #c4a7e7;
-$link-unvisited: #31748f;
+$accent: $rose;
+
+$link-visited: $iris;
+$link-unvisited: $pine;
