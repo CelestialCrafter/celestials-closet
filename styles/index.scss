@@ -1,0 +1,13 @@
+@use "colors";
+@use "sizes";
+
+.messages {
+  list-style: none;
+  padding-left: 0;
+  max-height: 10rem;
+  overflow-y: scroll;
+
+  .name {
+    color: colors.$subtle;
+  }
+}

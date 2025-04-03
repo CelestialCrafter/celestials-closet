@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 
 {% block head %}
-<title>celestial's closet - {{ post.title }}</title>
-<meta name="description" content={{ post.summary }}>
+<title>cel's closet - {{post.title}}</title>
+<meta name="description" content={{post.summary}}>
+<style>{{grass::include!("styles/post.scss")|safe}}</style>
 {% endblock %}
 
 {% block body %}
+<div id="content">
 {{ post.html|safe }}
-<br>
-<span>last update: {{post.revision.timestamp}}, change id: {{post.revision.change}}</span>
+</div>
 {% endblock %}

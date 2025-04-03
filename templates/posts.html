@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 
 {% block head %}
-<title>celestial's closet - posts</title>
+{% include "oneko.html" %}
+<title>cel's closet - posts</title>
 {% call super() %}
 {% endblock %}
  
@@ -9,9 +10,8 @@
 <h1>posts</h1>
 {% for post in posts %}
 <div>
-	<a href="/posts/{{post.id}}"><h2>{{post.title}}</h2></a>
+	<h2><a href="/posts/{{post.id}}">{{post.title}}</a></h2>
 	<p>{{post.summary}}</p>
-	<span>last updated: {{post.revision.timestamp}}</span>
 </div>
 {% endfor %}
 {% endblock %}

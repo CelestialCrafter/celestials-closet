@@ -1,13 +1,13 @@
 use std::{
     env, fs,
-    path::{Path, PathBuf}
+    path::Path,
 };
 
-use eyre::{eyre, Result};
+use eyre::{eyre, ErrReport, Result};
 use proc_macro2::Literal;
 use walkdir::WalkDir;
 
-use crate::{escape, map};
+use crate::{escape, hashmap};
 
 const ASSETS_DIR: &str = "assets";
 
@@ -17,30 +17,30 @@ pub fn pack_assets() -> Result<()> {
     let assets_path = env::current_dir()?.join(ASSETS_DIR);
     let entries = WalkDir::new(assets_path.clone())
         .into_iter()
+        .filter_entry(|entry| !entry.path().is_dir())
         .map(|entry| {
-            let path = entry?;
+            let entry = entry?;
+            let path = entry.path();
+
             let name = path
                 .file_name()
+                .ok_or(eyre!("path does not have file name"))?
                 .to_str()
                 .ok_or(eyre!("file name is not utf-8"))?;
 
-            Ok((escape(name), path.path().to_path_buf()))
-        })
-        .collect::<Result<Vec<(String, PathBuf)>>>()?
-        .into_iter()
-        .filter(|(_, p)| p.is_file())
-        .map(|(name, path)| {
             Ok(format!(
-                "{}, {}.to_vec()",
-                name,
-                Literal::byte_string(&fs::read(path)?).to_string()
+                "({}, {})",
+                escape(name),
+                Literal::byte_string(&fs::read(path)?)
             ))
         })
-        .collect::<Result<Vec<String>>>()?;
+        .map(|v| {
+            v.inspect_err(|err: &ErrReport| println!("cargo:warning=could not process post: {err}"))
+        }).collect::<Result<Vec<_>>>().map_err(|_| eyre!("could not process assets"))?;
 
     fs::write(
         Path::new(&env::var("OUT_DIR")?).join("assets.rs"),
-        map("ASSETS", "&str, Vec<u8>", entries.into_iter()),
+        hashmap("ASSETS", "&str, &[u8]", entries.into_iter()),
     )?;
 
     Ok(())
