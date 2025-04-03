@@ -1,14 +1,14 @@
 @use "sizes";
 
 .gallery {
-  height: 16rem;
-  overflow: scroll;
-  width: fit-content;
-  display: grid;
-  gap: sizes.$spacing-m;
+	height: 16rem;
+	overflow-y: scroll;
+	width: fit-content;
+	display: grid;
+	gap: sizes.$spacing-m;
 
-  img {
-    border-radius: sizes.$rounding;
-    height: 16rem;
-  }
+	img {
+		border-radius: sizes.$rounding;
+		height: 16rem;
+	}
 }

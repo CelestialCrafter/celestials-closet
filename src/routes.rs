@@ -1,8 +1,8 @@
-use std::sync::Arc;
+use std::net::SocketAddr;
 
-use warp::{filters, path, reply, Filter};
+use warp::{filters, reply::Reply, Filter};
 
-use crate::database::Database;
+use crate::{assets, database::Database};
 
 pub mod database;
 pub mod index;
@@ -10,27 +10,22 @@ pub mod posts;
 pub mod projects;
 pub mod rejections;
 
-pub fn routes(db: Arc<Database>) -> filters::BoxedFilter<(impl reply::Reply,)> {
-    let index = path::end().map(move || db.increment()).then(index::page);
-    let projects = path("projects").then(projects::page);
+pub fn routes(db: &'static Database) -> filters::BoxedFilter<(impl Reply,)> {
+    let count_view = warp::any()
+        .and(filters::addr::remote())
+        .map(move |addr: Option<SocketAddr>| {
+            if let Some(addr) = addr {
+                db.store(addr.ip(), None).unwrap();
+            }
+        })
+        .untuple_one();
 
-    let posts = {
-        let listing = path::end().then(posts::listing);
-        let post = path::param().and_then(posts::post);
-
-        path("posts").and(listing.or(post))
-    };
-
-    let assets = path("assets").and(filters::fs::dir("assets")).map(|reply| {
-        reply::with_header(
-            reply,
-            "Cache-Control",
-            format!("max-age={}", 60 * 60 * 24 * 7),
-        )
-    });
-
-    let root = assets.or(index).or(projects).or(posts);
-    root.recover(rejections::handle)
-        .with(filters::compression::brotli())
+    assets::route()
+        .or(count_view
+            .and(index::route(db))
+            .or(projects::route())
+            .or(posts::route()))
+        .recover(rejections::handle)
+        .with(filters::compression::gzip())
         .boxed()
 }
