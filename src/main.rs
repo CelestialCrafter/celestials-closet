@@ -4,52 +4,55 @@ pub mod database;
 pub mod routes;
 
 use std::{
-    fs::OpenOptions,
-    io::{Seek, SeekFrom},
+    fs::{File, OpenOptions},
+    io::Seek,
     net::SocketAddr,
-    sync::Arc,
     time::Duration,
 };
 
+use eyre::Result;
+use log::{info, warn};
+use tokio::task;
+
 use args::ARGS;
 use database::Database;
-use log::warn;
-use tokio::task;
+
+fn save(db: &Database, file: &mut File) -> Result<()> {
+    file.set_len(0)?;
+    file.rewind()?;
+    db.save(file)?;
+
+    Ok(())
+}
+
+async fn save_loop(db: &Database, mut file: File) {
+    loop {
+        match save(db, &mut file) {
+            Ok(_) => info!("saved database"),
+            Err(err) => warn!("could not save database: {}", err),
+        }
+
+        tokio::time::sleep(Duration::from_secs(60)).await;
+    }
+}
 
 #[tokio::main]
 async fn main() {
-    // logging
-    let mut builder = pretty_env_logger::formatted_builder();
-    match &ARGS.log {
-        Some(filter) => builder.parse_filters(filter.as_str()),
-        None => &mut builder,
-    }
-    .init();
+    pretty_env_logger::formatted_builder()
+        .parse_filters(ARGS.log.as_str())
+        .init();
 
     // database
-    let mut db_file = OpenOptions::new()
+    let db_file = OpenOptions::new()
         .write(true)
         .read(true)
         .create(true)
         .open("database.db")
-        .expect("should be able to open database file");
-    let db = Arc::new(Database::new(&mut db_file).expect("should be able to create database"));
+        .expect("database file should open");
 
-    {
-        let db = db.clone();
-        task::spawn(async move {
-            loop {
-                if let Err(err) = db_file
-                    .seek(SeekFrom::Start(0))
-                    .and_then(|_| Ok(db.save(&mut db_file)))
-                {
-                    warn!("could not save database: {err}")
-                }
-
-                tokio::time::sleep(Duration::from_secs(10)).await;
-            }
-        });
-    }
+    let db = Box::leak(Box::new(Database::default()));
+    db.load(&db_file).expect("database file should load");
+    task::spawn(async { save_loop(db, db_file).await });
 
     // serve
     let host = SocketAddr::from(([0, 0, 0, 0], ARGS.port));

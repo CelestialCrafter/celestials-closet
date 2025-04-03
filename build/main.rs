@@ -2,28 +2,25 @@ mod assets;
 mod posts;
 mod highlighting;
 
+use std::fmt::Display;
+
 use eyre::Result;
 use proc_macro2::Literal;
 
-fn escape(input: &str) -> String {
-    Literal::string(input).to_string()
+fn escape(input: &str) -> impl Display {
+    Literal::string(input)
 }
 
-fn map(name: &str, map_sig: &str, entries: impl Iterator<Item = String>) -> String {
+fn hashmap(name: &str, map_sig: &str, entries: impl Iterator<Item = impl Display>) -> String {
     format!(
         "use std::{{sync::LazyLock, collections::HashMap}};
 
-             static {}: LazyLock<HashMap<{}>> = LazyLock::new(|| {{
-                let mut map = HashMap::new();
-                {}
-                map
-            }});",
+        static {}: LazyLock<HashMap<{}>> = LazyLock::new(|| HashMap::from([
+            {}
+        ]));",
         name,
         map_sig,
-        entries
-            .map(|data| format!("map.insert({});", data))
-            .collect::<Vec<String>>()
-            .join("\n")
+        entries.map(|v| v.to_string()).collect::<Vec<_>>().join(",\n")
     )
 }
 
