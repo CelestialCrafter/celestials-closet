@@ -46,12 +46,8 @@ summary for markdown test blah blah blah
 
 `inline`
 
-```
-fenced
-```
-
-```js
-const syntax = () => "highlighted";
+```javascript
+const syntax = () => "highlighted (and fenced)";
 console.log(syntax());
 ```
 
@@ -71,4 +67,4 @@ console.log(syntax());
 
 ## images
 
-![favicon](/favicon.ico)
+![profile](/assets/profile.webp)

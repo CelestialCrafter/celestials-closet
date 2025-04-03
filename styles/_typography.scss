@@ -26,7 +26,7 @@ pre {
 }
 
 p {
-  color: colors.$text-subtle;
+  color: colors.$subtle;
   margin-top: 0;
   margin-bottom: sizes.$spacing-s;
 }
@@ -43,7 +43,7 @@ a {
 small,
 sub,
 sup {
-  color: colors.$text-subtle;
+  color: colors.$subtle;
   font-size: 0.75em;
 }
 
