@@ -5,59 +5,68 @@
 @use "sizes";
 
 @mixin section {
-  border-radius: sizes.$rounding;
-  border: 0.15rem solid colors.$highlight;
-  background-color: colors.$surface;
-  padding: sizes.$spacing-l;
+	border-radius: sizes.$rounding;
+	border: typography.$border;
+	background-color: colors.$surface;
+	padding: sizes.$spacing-l;
 }
 
 body {
-  display: grid;
-  gap: sizes.$spacing-m;
+	display: grid;
+	gap: sizes.$spacing-m;
 
-  background-color: colors.$base;
-  padding: sizes.$spacing-m;
+	background-color: colors.$base;
+	padding: sizes.$spacing-m;
 
-  grid-template-areas: "nav" "aside" "main";
+	grid-template-areas: "nav" "aside" "divider" "main";
 }
 
 nav {
-  grid-area: nav;
+	grid-area: nav;
 
-  a:first-child {
-    color: colors.$accent;
-  }
+	a:first-child {
+		color: colors.$accent;
+	}
 }
 
 aside {
-  grid-area: aside;
+	grid-area: aside;
 
-  text-align: center;
-  height: fit-content;
+	text-align: center;
+	height: fit-content;
 
-  h2 {
-    color: colors.$accent;
-  }
+	h2 {
+		color: colors.$accent;
+	}
 
-  img {
-    border-radius: 50%;
-    aspect-ratio: 1/1;
-    width: calc(sizes.$spacing-l * 4);
-  }
+	img {
+		border-radius: 50%;
+		aspect-ratio: 1/1;
+		width: calc(sizes.$spacing-l * 4);
+	}
 }
 
 main {
-  grid-area: main;
-  max-width: 48rem;
+	grid-area: main;
+	max-width: 48rem;
+	justify-self: center;
 }
 
-@media (min-width: 56rem) {
-  body {
-    grid-template-areas: "nav nav" "aside main";
-    grid-template-columns: 18rem;
-  }
+@media (min-width: 52rem) {
+	body {
+		grid-template-areas: "nav nav" "aside main";
+		grid-template-columns: 18rem;
+	}
 
-  main, aside {
-    @include section;
-  }
+	main, aside {
+		@include section;
+	}
+
+	main {
+		justify-self: unset;
+	}
+
+	.divider {
+		display: none;
+	}
 }

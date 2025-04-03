@@ -1,64 +1,54 @@
-use std::{env, fs, path::Path, process::Command};
+use std::{env, fs, path::Path};
 
-use eyre::{eyre, Result};
-use pulldown_cmark::{Options, Parser};
+use eyre::{eyre, ErrReport, Result};
+use pulldown_cmark::{CowStr, Event, LinkType, Options, Parser, Tag, TagEnd};
 use tree_sitter_highlight::Highlighter;
 
-use crate::{escape, highlighting::inject_highlights, map};
+use crate::{escape, hashmap, highlighting::inject_highlights};
 
 const POSTS_DIR: &str = "posts";
 
-// @HACK gross but adding jj_lib makes the build time so long
-fn get_revision(path: &str) -> Result<(String, u64)> {
-    let common_args = [
-        "--ignore-working-copy",
-        "--no-pager",
-        "--quiet",
-        "--color",
-        "never",
-    ];
+fn inject_heading_links<'a>(
+    parser: impl Iterator<Item = Event<'a>>,
+) -> impl Iterator<Item = Event<'a>> {
+    parser
+        .scan(None, |state, event| {
+            match event {
+                Event::Text(ref text) => {
+                    if let Some(Tag::Heading {
+                        ref mut id, level, ..
+                    }) = state
+                    {
+                        let new_id = text.to_lowercase().replace(" ", "-");
+                        let link = Tag::Link {
+                            link_type: LinkType::Inline,
+                            dest_url: format!("#{}", new_id).into(),
+                            title: CowStr::Borrowed(""),
+                            id: CowStr::Borrowed(""),
+                        };
+                        *id = Some(new_id.into());
+                        let level = level.clone();
 
-    // get revision
-    let change = {
-        let annotate = Command::new("jj")
-            .args(["file", "annotate", path])
-            .args(common_args)
-            .output()?;
-        if !annotate.status.success() {
-            Err(eyre!("jj errored: {}", String::from_utf8(annotate.stderr)?))?;
-        }
+                        return Some(vec![
+                            Event::Start(state.take().unwrap()),
+                            Event::Start(link),
+                            event,
+                            Event::End(TagEnd::Link),
+                            Event::End(TagEnd::Heading(level)),
+                        ]);
+                    }
+                }
+                Event::Start(tag @ Tag::Heading { id: None, .. }) => {
+                    *state = Some(tag);
+                    return Some(vec![]);
+                }
+                Event::End(TagEnd::Heading(_)) => return Some(vec![]),
+                _ => (),
+            }
 
-        let stdout = String::from_utf8(annotate.stdout)?;
-        let (revision, _) = stdout
-            .split_once(' ')
-            .ok_or(eyre!("no space delimiter found"))?;
-
-        revision.to_string()
-    };
-
-    let timestamp = {
-        let show = Command::new("jj")
-            .args([
-                "show",
-                &change,
-                "--template",
-                r#"author.timestamp().utc().format("%s") ++ " ""#,
-            ])
-            .args(common_args)
-            .output()?;
-        if !show.status.success() {
-            return Err(eyre!("jj errored: {}", String::from_utf8(show.stderr)?));
-        }
-
-        let stdout = String::from_utf8(show.stdout)?;
-        let (timestamp, _) = stdout
-            .split_once(' ')
-            .ok_or(eyre!("could not find space delimiter"))?;
-
-        timestamp.parse()?
-    };
-
-    Ok((change, timestamp))
+            Some(vec![event])
+        })
+        .flatten()
 }
 
 pub fn process_posts() -> Result<()> {
@@ -71,55 +61,57 @@ pub fn process_posts() -> Result<()> {
 
     let mut highlighter = Highlighter::new();
     let entries = fs::read_dir(env::current_dir()?.join(POSTS_DIR))?
-        .into_iter()
         .map(|entry| {
+            // paths
             let path = entry?.path();
-            let name = path
+
+            let id = path
                 .file_stem()
-                .ok_or(eyre!("no stem on path"))?
+                .ok_or(eyre!("path does not have file name"))?
                 .to_str()
-                .ok_or(eyre!("file stem is not utf-8"))?;
-            let path = path.to_str().ok_or(eyre!("file path is not utf-8"))?;
-            let input = fs::read_to_string(path)?;
+                .ok_or(eyre!("could not convert stem to utf8"))?;
+
+            let data = fs::read_to_string(&path)?;
+
+            let parser = Parser::new_ext(&data, parser_opts);
+            let parser = inject_highlights(&mut highlighter, parser);
+            let parser = inject_heading_links(parser);
+
+            let (mut title, mut summary) = (None, None);
+            let parser = parser.map(|event| {
+                if let Event::Text(ref text) = event {
+                    if title.is_none() {
+                        title = Some(text.clone());
+                    } else if summary.is_none() {
+                        summary = Some(text.clone());
+                    };
+                }
+
+                event
+            });
 
             let mut html = String::new();
-            pulldown_cmark::html::push_html(
-                &mut html,
-                inject_highlights(&mut highlighter, Parser::new_ext(&input, parser_opts)),
-            );
-
-            let id = escape(name);
-            let rev = get_revision(path)?;
-
-            let mut lines = input.lines();
-            let (_, title) = lines
-                .next()
-                .unwrap_or_default()
-                .split_once("# ")
-                .unwrap_or_default();
-            let summary = lines.find(|line| !line.is_empty()).unwrap_or_default();
+            pulldown_cmark::html::push_html(&mut html, parser);
 
             Ok(format!(
-                "{}, Post {{
+                "({}, Post {{
                     id: {},
                     title: {},
                     summary: {},
                     html: {},
-                    revision: Revision {{
-                        change: {},
-                        timestamp: {}
-                    }}
-                }}",
-                id,
-                id,
-                escape(title),
-                escape(&summary),
+                }})",
+                escape(id),
+                escape(id),
+                escape(&title.ok_or(eyre!("post did not have title"))?),
+                escape(&summary.ok_or(eyre!("post did not have summary"))?),
                 escape(&html),
-                escape(&rev.0),
-                rev.1
             ))
         })
-        .collect::<Result<Vec<String>>>()?;
+        .map(|v| {
+            v.inspect_err(|err: &ErrReport| eprintln!("could not process post: {err}"))
+        })
+        .collect::<Result<Vec<_>>>()
+        .map_err(|_| eyre!("could not process assets"))?;
 
     fs::write(
         Path::new(&env::var("OUT_DIR")?).join("posts.rs"),
@@ -130,14 +122,8 @@ pub fn process_posts() -> Result<()> {
                 id: &'a str,
                 summary: &'a str,
                 html: &'a str,
-                revision: Revision<'a>,
-            }
-
-            struct Revision<'a> {
-                change: &'a str,
-                timestamp: u64,
             }",
-            map("POSTS", "&str, Post", entries.into_iter())
+            hashmap("POSTS", "&str, Post", entries.into_iter())
         ),
     )?;
 
