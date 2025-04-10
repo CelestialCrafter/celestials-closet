@@ -1,6 +1,9 @@
-# markdown test
-
-summary for markdown test blah blah blah
+---
+summary = "summary for markdown test blah blah blah"
+title = "markdown test"
+date = 2025-04-10
+id = "md-test"
+---
 
 ## headings
 
