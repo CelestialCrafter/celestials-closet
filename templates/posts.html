@@ -12,6 +12,7 @@
 <div>
 	<h2><a href="/posts/{{post.id}}">{{post.title}}</a></h2>
 	<p>{{post.summary}}</p>
+	<small>created on <time datetime="{{post.date}}">{{post.date}}</time></small>
 </div>
 {% endfor %}
 {% endblock %}
