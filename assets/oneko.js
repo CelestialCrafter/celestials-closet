@@ -1,4 +1,4 @@
-// oneko.js: https://github.com/adryd325/oneko.js
+// based on https://github.com/adryd325/oneko.js
 
 const speed = 10;
 const max = 15;
@@ -66,18 +66,16 @@ const spriteSets = {
   ],
 };
 
-let mousePosX = 0;
-let mousePosY = 0;
-
+let mouseX = 0;
+let mouseY = 0;
 document.addEventListener("mousemove", function (event) {
-  mousePosX = event.clientX;
-  mousePosY = event.clientY;
+  mouseX = event.clientX;
+  mouseY = event.clientY;
 });
 
 const nekos = [];
 let frame = 0;
 let lastFrame = 0;
-
 const animate = (timestamp) => {
   if (timestamp - lastFrame >= updateInterval) {
     lastFrame = timestamp;
@@ -93,138 +91,128 @@ const animate = (timestamp) => {
 
 window.requestAnimationFrame(animate);
 
+const init = (state) => {
+  const element = document.createElement("div");
+  element.classList.add("oneko");
+  element.ariaHidden = true;
+  element.style.left = `${state.nekoX - 16}px`;
+  element.style.top = `${state.nekoY - 16}px`;
+  element.onclick = () => {
+    if (nekos.length <= max) oneko();
+  };
+
+  document.body.appendChild(element);
+  state.element = element;
+};
+
+const setSprite = (element) => (dir, frame) => {
+	console.log(dir);
+  const sprite = spriteSets[dir][frame % spriteSets[dir].length];
+  element.style.backgroundPosition = `${sprite[0] * 32}px ${sprite[1] * 32}px`;
+};
+
+const resetIdleAnimation = (state) => () => {
+  state.idleAnimation = null;
+  state.idleAnimationFrame = 0;
+};
+
+const idle = (state, setSprite) => () => {
+  state.idleTime++;
+
+  // every ~20 seconds
+  if (
+    state.idleTime > 10 &&
+    Math.floor(Math.random() * 200) == 0 &&
+    !state.idleAnimation
+  ) {
+    const { nekoX: x, nekoY: y } = state;
+    let available = ["sleeping", "scratchSelf"];
+    if (x < 32) available.push("scratchWallW");
+    if (y < 32) available.push("scratchWallN");
+    if (x > window.innerWidth - 32) available.push("scratchWallE");
+    if (y > window.innerHeight - 32) available.push("scratchWallS");
+
+    state.idleAnimation =
+      available[Math.floor(Math.random() * available.length)];
+  }
+
+  const { idleAnimationFrame: idleFrame } = state;
+  switch (state.idleAnimation) {
+    case "sleeping":
+      if (idleFrame < 8) {
+        setSprite("tired", 0);
+      } else {
+        setSprite("sleeping", Math.floor(idleFrame / 4));
+        if (idleFrame > 192) resetIdleAnimation();
+      }
+
+      break;
+    case "scratchSelf":
+      setSprite(state.idleAnimation, frame);
+      if (frame > 9) resetIdleAnimation();
+
+      break;
+    default:
+      setSprite("idle", 0);
+
+      return;
+  }
+
+  state.idleAnimationFrame++;
+};
+
+const tick = (state, idle, setSprite) => () => {
+  const diffX = state.nekoX - mouseX;
+  const diffY = state.nekoY - mouseY;
+  const distance = Math.sqrt(diffX ** 2 + diffY ** 2);
+  if (distance < speed || distance < 48) {
+    idle();
+    return;
+  }
+
+  state.idleAnimation = null;
+  state.idleAnimationFrame = 0;
+  if (state.idleTime > 1) {
+    setSprite("alert", 0);
+    // count down after being alerted before moving
+    state.idleTime = Math.min(state.idleTime, 7);
+    state.idleTime -= 1;
+    return;
+  }
+
+  let direction;
+  direction = diffY / distance > 0.5 ? "N" : "";
+  direction += diffY / distance < -0.5 ? "S" : "";
+  direction += diffX / distance > 0.5 ? "W" : "";
+  direction += diffX / distance < -0.5 ? "E" : "";
+  setSprite(direction, frame);
+
+  state.nekoX -= (diffX / distance) * speed;
+  state.nekoY -= (diffY / distance) * speed;
+
+  state.nekoX = Math.min(Math.max(16, state.nekoX), window.innerWidth - 16);
+  state.nekoY = Math.min(Math.max(16, state.nekoY), window.innerHeight - 16);
+
+  state.element.style.left = `${state.nekoX - 16}px`;
+  state.element.style.top = `${state.nekoY - 16}px`;
+};
+
 const oneko = () => {
-  const nekoEl = document.createElement("div");
+  const state = {
+    nekoX: 32,
+    nekoY: 32,
 
-  let nekoPosX = 32;
-  let nekoPosY = 32;
+    idleTime: 0,
+    idleAnimation: null,
+    idleAnimationFrame: 0,
 
-  let idleTime = 0;
-  let idleAnimation = null;
-  let idleAnimationFrame = 0;
-
-  const init = () => {
-    nekoEl.classList.add("oneko");
-    nekoEl.ariaHidden = true;
-    nekoEl.style.left = `${nekoPosX - 16}px`;
-    nekoEl.style.top = `${nekoPosY - 16}px`;
-    nekoEl.style.filter = `invert(${1 / (max / nekos.length)})`;
-    nekoEl.onclick = () => {
-      if (nekos.length <= max) oneko();
-    };
-
-    document.body.appendChild(nekoEl);
+    element: null,
   };
 
-  const setSprite = (dir) => {
-    const sprite = spriteSets[dir][frame % spriteSets[dir].length];
-    nekoEl.style.backgroundPosition = `${sprite[0] * 32}px ${sprite[1] * 32}px`;
-  };
+  init(state);
 
-  const resetIdleAnimation = () => {
-    idleAnimation = null;
-    idleAnimationFrame = 0;
-  };
-
-  const idle = () => {
-    idleTime++;
-
-    // every ~20 seconds
-    if (
-      idleTime > 10 &&
-      Math.floor(Math.random() * 200) == 0 &&
-      idleAnimation == null
-    ) {
-      let avalibleIdleAnimations = ["sleeping", "scratchSelf"];
-      if (nekoPosX < 32) {
-        avalibleIdleAnimations.push("scratchWallW");
-      }
-      if (nekoPosY < 32) {
-        avalibleIdleAnimations.push("scratchWallN");
-      }
-      if (nekoPosX > window.innerWidth - 32) {
-        avalibleIdleAnimations.push("scratchWallE");
-      }
-      if (nekoPosY > window.innerHeight - 32) {
-        avalibleIdleAnimations.push("scratchWallS");
-      }
-      idleAnimation =
-        avalibleIdleAnimations[
-          Math.floor(Math.random() * avalibleIdleAnimations.length)
-        ];
-    }
-
-    switch (idleAnimation) {
-      case "sleeping":
-        if (idleAnimationFrame < 8) {
-          setSprite("tired", 0);
-          break;
-        }
-        setSprite("sleeping", Math.floor(idleAnimationFrame / 4));
-        if (idleAnimationFrame > 192) {
-          resetIdleAnimation();
-        }
-        break;
-      case "scratchWallN":
-      case "scratchWallS":
-      case "scratchWallE":
-      case "scratchWallW":
-      case "scratchSelf":
-        setSprite(idleAnimation, idleAnimationFrame);
-        if (idleAnimationFrame > 9) {
-          resetIdleAnimation();
-        }
-        break;
-      default:
-        setSprite("idle", 0);
-        return;
-    }
-    idleAnimationFrame++;
-  };
-
-  nekos.push(() => {
-    if (!nekoEl.isConnected) {
-      return;
-    }
-
-    const diffX = nekoPosX - mousePosX;
-    const diffY = nekoPosY - mousePosY;
-    const distance = Math.sqrt(diffX ** 2 + diffY ** 2);
-
-    if (distance < speed || distance < 48) {
-      idle();
-      return;
-    }
-
-    idleAnimation = null;
-    idleAnimationFrame = 0;
-
-    if (idleTime > 1) {
-      setSprite("alert", 0);
-      // count down after being alerted before moving
-      idleTime = Math.min(idleTime, 7);
-      idleTime -= 1;
-      return;
-    }
-
-    let direction;
-    direction = diffY / distance > 0.5 ? "N" : "";
-    direction += diffY / distance < -0.5 ? "S" : "";
-    direction += diffX / distance > 0.5 ? "W" : "";
-    direction += diffX / distance < -0.5 ? "E" : "";
-    setSprite(direction);
-
-    nekoPosX -= (diffX / distance) * speed;
-    nekoPosY -= (diffY / distance) * speed;
-
-    nekoPosX = Math.min(Math.max(16, nekoPosX), window.innerWidth - 16);
-    nekoPosY = Math.min(Math.max(16, nekoPosY), window.innerHeight - 16);
-
-    nekoEl.style.left = `${nekoPosX - 16}px`;
-    nekoEl.style.top = `${nekoPosY - 16}px`;
-  });
-
-  init();
+  const ss = setSprite(state.element);
+  nekos.push(tick(state, idle(state, ss), ss));
 };
 
 oneko();
