@@ -51,6 +51,16 @@ fn inject_heading_links<'a>(
         .flatten()
 }
 
+macro_rules! extract {
+    ($frontmatter:expr, $conv:ident, $key:expr) => {
+        $frontmatter
+            .get($key)
+            .ok_or(eyre!("post does not have {}", $key))?
+            .$conv()
+            .ok_or(eyre!("post {} is not string", $key))?
+    };
+}
+
 pub fn process_posts() -> Result<()> {
     println!("cargo::rerun-if-changed={}", POSTS_DIR);
 
@@ -62,67 +72,83 @@ pub fn process_posts() -> Result<()> {
     let mut highlighter = Highlighter::new();
     let entries = fs::read_dir(env::current_dir()?.join(POSTS_DIR))?
         .map(|entry| {
-            // paths
-            let path = entry?.path();
+            let lines = fs::read_to_string(&entry?.path())?;
+            let mut lines = lines.lines();
+            let lines = lines.by_ref();
 
-            let id = path
-                .file_stem()
-                .ok_or(eyre!("path does not have file name"))?
-                .to_str()
-                .ok_or(eyre!("could not convert stem to utf8"))?;
+            // if statements are for losers
+            let (frontmatter, content): (toml::Table, _) = (
+                toml::from_str(
+                    &lines
+                        .scan(false, |state, line| match line == "---" {
+                            true => match state {
+                                true => None,
+                                false => {
+                                    *state = true;
+                                    Some(None)
+                                }
+                            },
+                            false => match state {
+                                true => Some(Some(Ok(line))),
+                                false => Some(Some(Err(eyre!("no metadata on post")))),
+                            },
+                        })
+                        .filter_map(|v| v)
+                        .collect::<Result<Vec<_>>>()?
+                        .join("\n"),
+                )?,
+                lines.collect::<Vec<_>>().join("\n"),
+            );
 
-            let data = fs::read_to_string(&path)?;
+            let parser = {
+                let original = Parser::new_ext(&content, parser_opts);
+                let highlighted = inject_highlights(&mut highlighter, original);
+                let linked = inject_heading_links(highlighted);
 
-            let parser = Parser::new_ext(&data, parser_opts);
-            let parser = inject_highlights(&mut highlighter, parser);
-            let parser = inject_heading_links(parser);
-
-            let (mut title, mut summary) = (None, None);
-            let parser = parser.map(|event| {
-                if let Event::Text(ref text) = event {
-                    if title.is_none() {
-                        title = Some(text.clone());
-                    } else if summary.is_none() {
-                        summary = Some(text.clone());
-                    };
-                }
-
-                event
-            });
+                linked
+            };
 
             let mut html = String::new();
             pulldown_cmark::html::push_html(&mut html, parser);
 
+            let id = escape(extract!(frontmatter, as_str, "id"));
+            let date = {
+                let date = extract!(frontmatter, as_datetime, "date")
+                    .date
+                    .ok_or(eyre!("post date is not a date"))?;
+
+                escape(&format!("{}/{}/{}", date.year, date.month, date.day))
+            };
+
             Ok(format!(
-                "({}, Post {{
-                    id: {},
+                "({id}, Post {{
+                    id: {id},
+                    date: {date},
                     title: {},
                     summary: {},
                     html: {},
                 }})",
-                escape(id),
-                escape(id),
-                escape(&title.ok_or(eyre!("post did not have title"))?),
-                escape(&summary.ok_or(eyre!("post did not have summary"))?),
+                escape(extract!(frontmatter, as_str, "title")),
+                escape(extract!(frontmatter, as_str, "summary")),
                 escape(&html),
             ))
         })
-        .map(|v| {
-            v.inspect_err(|err: &ErrReport| eprintln!("could not process post: {err}"))
-        })
+        .map(|v| v.inspect_err(|err: &ErrReport| eprintln!("could not process post: {err}")))
         .collect::<Result<Vec<_>>>()
         .map_err(|_| eyre!("could not process assets"))?;
 
     fs::write(
         Path::new(&env::var("OUT_DIR")?).join("posts.rs"),
         format!(
-            "{}{}",
-            "struct Post<'a> {
+            "struct Post<'a> {{
                 title: &'a str,
                 id: &'a str,
+                date: &'a str,
                 summary: &'a str,
                 html: &'a str,
-            }",
+            }}
+
+            {}",
             hashmap("POSTS", "&str, Post", entries.into_iter())
         ),
     )?;

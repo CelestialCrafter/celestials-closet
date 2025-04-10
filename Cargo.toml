@@ -14,6 +14,7 @@ tree-sitter-rust = "0.24.0"
 tree-sitter-javascript = "0.23.1"
 tree-sitter-html = "0.23.2"
 html-escape = "0.2.13"
+toml = "0.8.20"
 
 [dependencies]
 askama = "0.12.1"
@@ -24,5 +25,4 @@ log = "0.4.25"
 pico-args = "0.5.0"
 pretty_env_logger = "0.5.0"
 tokio = { version = "1.43.0", features = ["macros", "rt-multi-thread"] }
-walkdir = "2.5.0"
 warp = { version = "0.3.7", features = ["compression-gzip"] }
