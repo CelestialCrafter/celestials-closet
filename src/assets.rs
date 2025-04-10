@@ -18,7 +18,7 @@ pub fn route() -> BoxedFilter<(impl Reply,)> {
             warp::reply::with_header(
                 reply,
                 "Cache-Control",
-                format!("max-age={}", 60 * 60 * 24 * 7),
+                format!("max-age={}", 60 * 60 * 24 * 30),
             )
         })
         .boxed()

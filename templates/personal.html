@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block head %}
+{% include "oneko.html" %}
+<title>cel's closet - personal</title>
+<style>{{grass::include!("styles/personal.scss")|safe}}</style>
+{% call super() %}
+{% endblock %}
+
+{% block body %}
+<h1>personal</h1>
+
+<h2 style="display: inline-block">interests</h2>
+<small>..besides programming</small>
+
+<div class="grid">
+	{% for interest in interests %}
+	<a href="{{interest.url}}" target="_blank">
+		<figure>
+			<img src="{{interest.image}}" alt="{{interest.title}}">
+			<figcaption>{{interest.title}}</figcaption>
+		</figure>
+	</a>
+	{% endfor %}
+</div>
+
+<h2>favorite songs</h2>
+
+<ul>
+	{% for song in songs %}
+	<li><a href="{{song.url}}" target="_blank">{{song.title}}</a><small> - {{song.artist}}</small></li>
+	{% endfor %}
+</ul>
+
+<h2>cool websites</h2>
+<ul>
+	{% for website in websites %}
+	<li><a href="{{website.url}}">{{website.title}}</a></li>
+	{% endfor %}
+</ul>
+
+{% endblock %}

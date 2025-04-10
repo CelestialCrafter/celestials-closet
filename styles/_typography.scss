@@ -1,5 +1,6 @@
 @use "colors";
 @use "sizes";
+@use "sass:color";
 
 $border: 0.15rem solid colors.$highlight;
 
@@ -28,38 +29,6 @@ input::placeholder {
 	font-style: italic;
 }
 
-<<<<<<< Conflict 1 of 1
-%%%%%%% Changes from base to side #1
--figure {
--    margin: 0;
--
--	img {
--		text-align: center;
--        width: 100%;
--        aspect-ratio: 1/1;
--		border-radius: sizes.$rounding;
--	}
--
--	figcaption {
--		text-align: center;
--	}
--}
--
- hr {
- 	width: 100%;
- 	color: colors.$highlight;
- }
- 
- ul, ol {
- 	margin: 0;
-     padding-left: sizes.$spacing-l;
- }
- 
- p {
- 	margin-top: 0;
- 	margin-bottom: sizes.$spacing-s;
- }
- 
 figure {
 	margin: 0;
 
@@ -72,6 +41,52 @@ figure {
 
 	figcaption {
 		text-align: center;
+	}
+}
+
+blockquote {
+	border-left: 0.35rem solid colors.$muted;
+	margin: 0 0 sizes.$spacing-m sizes.$spacing-m;
+	padding: sizes.$spacing-s;
+}
+
+hr {
+	width: 100%;
+    height: 0;
+
+    border: none;
+    border-bottom: $border;
+}
+
+ul, ol {
+	margin: 0;
+	padding-left: sizes.$spacing-l;
+
+	&::marker {
+		color: colors.$subtle;
+	}
+}
+
+ul {
+	list-style-type: "> ";
+}
+
+ol li {
+	counter-increment: li;
+
+	&::marker {
+		content: counter(li, decimal) " ";
+	}
+}
+
+table {
+    thead {
+      border-bottom: $border;
+    }
+
+	border-collapse: collapse;
+	tr:nth-child(even) {
+		background-color: color.change(colors.$muted, $alpha: 0.2);
 	}
 }
 
@@ -95,37 +110,6 @@ a {
 	}
 }
 
-blockquote {
-	border-left: 0.35rem solid colors.$muted;
-	margin: 0 0 sizes.$spacing-m sizes.$spacing-m;
-	padding: sizes.$spacing-s;
-}
-
-hr {
-	width: 100%;
-	color: colors.$highlight;
-}
-
-ul, ol {
-	margin: 0;
-	padding-left: sizes.$spacing-l;
-}
-
-ul {
-	list-style-type: "> ";
-}
-
-ol li {
-	counter-increment: li;
-	&::marker {
-		content: counter(li, decimal) " ";
-	}
-}
-
-::marker {
-	color: colors.$subtle;
-}
-
 p {
 	margin-top: 0;
 	margin-bottom: sizes.$spacing-s;
@@ -143,7 +127,7 @@ h4,
 h5,
 h6 {
 	font-weight: bold;
-	margin-top: sizes.$spacing-l;
+	margin-top: sizes.$spacing-m;
 	margin-bottom: 0;
 }
 
