@@ -28,6 +28,21 @@ input::placeholder {
 	font-style: italic;
 }
 
+figure {
+    margin: 0;
+
+	img {
+		text-align: center;
+        width: 100%;
+        aspect-ratio: 1/1;
+		border-radius: sizes.$rounding;
+	}
+
+	figcaption {
+		text-align: center;
+	}
+}
+
 hr {
 	width: 100%;
 	color: colors.$highlight;
@@ -86,7 +101,7 @@ h4,
 h5,
 h6 {
 	font-weight: bold;
-	margin-top: sizes.$spacing-l;
+	margin-top: sizes.$spacing-m;
 	margin-bottom: 0;
 }
 
