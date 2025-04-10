@@ -15,7 +15,7 @@
 
 <div class="grid">
 	{% for interest in interests %}
-	<a href="{{interest.url}}" target="_blank">
+	<a href="{{interest.url}}">
 		<figure>
 			<img src="{{interest.image}}" alt="{{interest.title}}">
 			<figcaption>{{interest.title}}</figcaption>
@@ -24,11 +24,16 @@
 	{% endfor %}
 </div>
 
+<h2>friends</h2>
+<ul>
+	<li><a href="https://ivrry.nekoweb.org">ivory</a></li>
+</ul>
+
 <h2>favorite songs</h2>
 
 <ul>
 	{% for song in songs %}
-	<li><a href="{{song.url}}" target="_blank">{{song.title}}</a><small> - {{song.artist}}</small></li>
+	<li><a href="{{song.url}}">{{song.title}}</a><small> - {{song.artist}}</small></li>
 	{% endfor %}
 </ul>
 

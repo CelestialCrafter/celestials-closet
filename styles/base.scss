@@ -12,17 +12,19 @@
 }
 
 body {
-	display: grid;
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: column;
+	align-items: center;
 	gap: sizes.$spacing-m;
 
 	background-color: colors.$base;
 	padding: sizes.$spacing-m;
-
-	grid-template-areas: "nav" "aside" "divider" "main";
 }
 
 nav {
-	grid-area: nav;
+	text-align: center;
+    width: 100%;
 
 	a:first-child {
 		color: colors.$accent;
@@ -30,13 +32,22 @@ nav {
 }
 
 aside {
-	grid-area: aside;
-
 	text-align: center;
-	height: fit-content;
+	width: 18rem;
+    height: fit-content;
+
+    div {
+      margin: 0 auto;
+      width: fit-content;
+    }
+
+    ul {
+      text-align: initial;
+    }
 
 	h2 {
 		color: colors.$accent;
+        margin-top: 0;
 	}
 
 	img {
@@ -47,23 +58,19 @@ aside {
 }
 
 main {
-	grid-area: main;
 	max-width: 48rem;
-	justify-self: center;
+	flex: 1;
 }
 
 @media (min-width: 52rem) {
 	body {
-		grid-template-areas: "nav nav" "aside main";
-		grid-template-columns: 18rem;
+		flex-direction: inherit;
+		align-items: inherit;
+		justify-content: center;
 	}
 
 	main, aside {
 		@include section;
-	}
-
-	main {
-		justify-self: unset;
 	}
 
 	.divider {
