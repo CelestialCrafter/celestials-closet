@@ -10,37 +10,35 @@
 {% block body %}
 <h1>index</h1>
 
-<div>
-	<h2>about me</h2>
-	<p>bawdabwbabababa ??? wawaw OAAUAUUU bawahhhh... lalanbabawdauwdbuawd RAHWUAHUBAUBABABAB wbbababaaa..... owaaawaaa??? lap bap bap bwop pwop plop lwop nanananya!!!!!!! bwourp lwourp mwourp gwourp .!!!,, maaaabaawaaabababbaabba hi!!!!</p>
+<h2>about me</h2>
 
-	<h3>languages</h3>
-	<ul>
-		<li>Rust</li>
-		<li>Go</li>
-		<li>Javascript</li>
-		<li>Python</li>
-		<li>Lua</li>
-		<li><small>...and your usual web stuff</small></li>
-	</ul>
-</div>
+<p>bawdabwbabababa ??? wawaw OAAUAUUU bawahhhh... lalanbabawdauwdbuawd RAHWUAHUBAUBABABAB wbbababaaa..... owaaawaaa??? lap bap bap bwop pwop plop lwop nanananya!!!!!!! bwourp lwourp mwourp gwourp .!!!,, maaaabaawaaabababbaabba hi!!!!</p>
 
-<div>
-	<h2>guestbook</h2>
-	<small>{{views}} visitor(s)</small>
+<h3>languages</h3>
 
-	<br><br>
-	<ul class="messages">
-		{% for message in messages %}
-		<li><span class="name">{{message.name}}:</span> {{message.content}}</li>
-		{% endfor %}
-	</ul>
-	<br>
+<ul>
+	<li>Rust</li>
+	<li>Go</li>
+	<li>Javascript</li>
+	<li>Python</li>
+	<li>Lua</li>
+	<li><small>...and your usual web stuff</small></li>
+</ul>
 
-	<form method="post">
-		<input name="name" placeholder="name..">
-		<input name="content" placeholder="message...">
-		<button>submit!</button>
-	</form>
-</div>
+<h2>guestbook</h2>
+<small>{{views}} visitor(s)</small>
+
+<br><br>
+<ul class="messages">
+	{% for message in messages %}
+	<li><span class="name">{{message.name}}:</span> {{message.content}}</li>
+	{% endfor %}
+</ul>
+<br>
+
+<form method="post">
+	<input name="name" placeholder="name..">
+	<input name="content" placeholder="message...">
+	<button>submit!</button>
+</form>
 {% endblock %}

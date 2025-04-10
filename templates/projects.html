@@ -8,13 +8,16 @@
 {% endblock %}
 
 {% block body %}
-
 <h1>projects</h1>
 {% for project in projects %}
 <div>
 	<a href="{{project.url}}"><h2>{{project.title}}</h2></a>
-	<p>{{project.description}}</p>
-	<small>made w/ {{format!("{}", project.language)}}</small>
+	<p>
+		{{project.description}}<br />
+		{% if project.language.known() %}
+		<small>made w/ {{format!("{}", project.language)}}</small>
+		{% endif %}
+	</p>
 	{% if let Some(images) = project.images %}
 	<div class="gallery">
 		{% for image in images %}

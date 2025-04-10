@@ -8,6 +8,7 @@ pub mod database;
 pub mod index;
 pub mod posts;
 pub mod projects;
+pub mod personal;
 pub mod rejections;
 
 pub fn routes(db: &'static Database) -> filters::BoxedFilter<(impl Reply,)> {
@@ -25,6 +26,7 @@ pub fn routes(db: &'static Database) -> filters::BoxedFilter<(impl Reply,)> {
             .and(index::route(db))
             .or(projects::route())
             .or(posts::route()))
+            .or(personal::route())
         .recover(rejections::handle)
         .with(filters::compression::gzip())
         .boxed()
