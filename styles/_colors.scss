@@ -1,20 +1,22 @@
 // rose pine
 
-$base: hsl(249, 22%, 12%);
-$surface: hsl(247, 23%, 15%);
-$overlay: hsl(248, 25%, 18%);
-$muted: hsl(249, 12%, 47%);
-$highlight: hsl(248, 13%, 36%);
+$base: hsl(249deg, 22%, 12%);
+$surface: hsl(247deg, 23%, 15%);
+$overlay: hsl(248deg, 25%, 18%);
+$muted: hsl(249deg, 12%, 47%);
 
-$text: hsl(245, 50%, 91%);
-$subtle: hsl(248, 15%, 61%);
+$highlight-high: hsl(248deg, 13%, 36%);
+$highlight-medium: hsl(248deg,13% ,36%);
 
-$love: hsl(343, 76%, 68%);
-$gold: hsl(35, 88%, 72%);
-$rose: hsl(2, 55%, 83%);
-$pine: hsl(197, 49%, 38%);
-$foam: hsl(189, 43%, 73%);
-$iris: hsl(267, 57%, 78%);
+$text: hsl(245deg, 50%, 91%);
+$subtle: hsl(248deg, 15%, 61%);
+
+$love: hsl(343deg, 76%, 68%);
+$gold: hsl(35deg, 88%, 72%);
+$rose: hsl(2deg, 55%, 83%);
+$pine: hsl(197deg, 49%, 38%);
+$foam: hsl(189deg, 43%, 73%);
+$iris: hsl(267deg, 57%, 78%);
 
 $accent: $rose;
 
