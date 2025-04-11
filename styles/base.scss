@@ -3,6 +3,7 @@
 @use "highlighting";
 @use "colors";
 @use "sizes";
+@use "sass:color";
 
 @mixin section {
 	border-radius: sizes.$rounding;
@@ -22,9 +23,19 @@ body {
 	padding: sizes.$spacing-m;
 }
 
+canvas {
+	position: fixed;
+    display: none;
+	top: 0;
+	z-index: -1;
+    --color0: #{colors.$iris};
+    --color1: #{colors.$foam};
+    --color2: #{colors.$text};
+}
+
 nav {
 	text-align: center;
-    width: 100%;
+	width: 100%;
 
 	a:first-child {
 		color: colors.$accent;
@@ -34,20 +45,20 @@ nav {
 aside {
 	text-align: center;
 	width: 18rem;
-    height: fit-content;
+	height: fit-content;
 
-    div {
-      margin: 0 auto;
-      width: fit-content;
-    }
+	div {
+		margin: 0 auto;
+		width: fit-content;
+	}
 
-    ul {
-      text-align: initial;
-    }
+	ul {
+		text-align: initial;
+	}
 
 	h2 {
 		color: colors.$accent;
-        margin-top: 0;
+		margin-top: 0;
 	}
 
 	img {
@@ -72,6 +83,10 @@ main {
 	main, aside {
 		@include section;
 	}
+
+    canvas {
+      display: initial;
+    }
 
 	.divider {
 		display: none;
