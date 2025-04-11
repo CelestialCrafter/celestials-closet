@@ -15,6 +15,7 @@ tree-sitter-javascript = "0.23.1"
 tree-sitter-html = "0.23.2"
 html-escape = "0.2.13"
 toml = "0.8.20"
+pulldown-cmark-escape = { version = "0.11.0", features = ["simd"] }
 
 [dependencies]
 askama = "0.12.1"

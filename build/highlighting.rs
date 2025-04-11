@@ -1,7 +1,8 @@
-use std::sync::LazyLock;
+use std::{fmt::Write, sync::LazyLock};
 
 use eyre::Result;
 use pulldown_cmark::{CodeBlockKind, CowStr, Event, Tag, TagEnd};
+use pulldown_cmark_escape::escape_html;
 use tree_sitter_highlight::{HighlightConfiguration, HighlightEvent, Highlighter};
 
 const HIGHLIGHT_NAMES: &[&str] = &[
@@ -89,20 +90,25 @@ fn highlight_code<'a>(
 ) -> Result<String> {
     let highlights = highlighter.highlight(config, code.as_bytes(), None, |_| None)?;
 
-    Ok(highlights
-        .filter_map(|e| e.ok())
-        .fold(
-            String::with_capacity(code.len()),
-            |acc, event| match event {
-                HighlightEvent::Source { start, end } => {
-                    acc + &html_escape::encode_text(&code[start..end])
-                }
-                HighlightEvent::HighlightStart(highlight) => {
-                    acc + "<span class=\"" + HIGHLIGHT_NAMES[highlight.0] + "\"/>"
-                }
-                HighlightEvent::HighlightEnd => acc + "</span>",
-            },
-        ))
+    let mut html = String::with_capacity(code.len());
+
+    for event in highlights.map(|e| {
+        e.unwrap_or_else(|err| {
+            println!("cargo:warning=highlight error: {}", err);
+            HighlightEvent::HighlightEnd
+        })
+    }) {
+        match event {
+            HighlightEvent::Source { start, end } => escape_html(&mut html, &code[start..end]),
+            HighlightEvent::HighlightStart(highlight) => {
+                write!(html, "<span class=\"{}\"/>", HIGHLIGHT_NAMES[highlight.0])
+            }
+            HighlightEvent::HighlightEnd => write!(html, "</span>"),
+        }
+        .unwrap();
+    }
+
+    Ok(html)
 }
 
 pub fn inject_highlights<'a>(
@@ -112,7 +118,9 @@ pub fn inject_highlights<'a>(
     iter.scan(None, move |state, event| {
         let inside = state.is_some();
         match event {
-            Event::Start(Tag::CodeBlock(CodeBlockKind::Fenced(ref language))) => *state = get_config(language),
+            Event::Start(Tag::CodeBlock(CodeBlockKind::Fenced(ref language))) => {
+                *state = get_config(language)
+            }
             Event::Text(ref code) if inside => {
                 match highlight_code(highlighter, state.unwrap(), code) {
                     Ok(highlighted) => return Some(Some(Event::Html(CowStr::from(highlighted)))),

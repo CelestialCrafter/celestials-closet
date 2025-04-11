@@ -32,6 +32,21 @@ id = "md-test"
 >> level 2
 >>> level 3
 
+> [!note]
+> note
+
+> [!tip]
+> tip
+
+> [!important]
+> important
+
+> [!warning]
+> warning
+
+> [!caution]
+> caution
+
 ## lists
 
 ### unordered
