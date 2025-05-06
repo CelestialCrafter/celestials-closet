@@ -23,15 +23,17 @@
 	</nav>
 
 	<aside>
-		<img src="/assets/profile.webp" alt="Celestial">
+		<div class="profile">
+			<img src="/assets/profile.webp" alt="Celestial">
+			<span class="status">loading weights...</span>
+		</div>
+
 		<div>
 			<h2>celestial</h2>
 			<ul>
 				<li><a href="https://github.com/CelestialCrafter">code</a></li>
-				<li><a href="mailto:celestialcraftermc@gmail.com">mail</a></li>
+				<li><a href="mailto:celestialcraftermc@gmail.com">email</a></li>
 				<li><a href="/assets/ed25519.txt">ed25519</a></li>
-				<li><a href="https://myanimelist.net/profile/CelestialCrafter">anime</a></li>
-				<li><a href="https://open.spotify.com/user/y9uke3eehk45lbbpky3z3agwx">music</a></li>
 			</ul>
 		</div>
 	</aside>
@@ -41,6 +43,17 @@
 	<main>
 	{% block body %}{% endblock %}
 	</main>
+
+	<script>
+		const status = document.querySelector(".status");
+		const statuses = [
+			"nixos btw :3",
+			"stack smashing detected",
+			"<a href=\"https://reddit.com/r/unixporn\">cooking rice</a>"
+		];
+
+		status.innerHTML = statuses[Math.floor(Math.random() * statuses.length)];
+	</script>
 
 	<script>
 		const canvas = document.querySelector("canvas");
@@ -53,12 +66,12 @@
 		};
 		window.onresize();
 		
-		const starCount = 384;
+		const starCount = 256;
 		const stars = Array.from({ length: starCount }, (_, i) => ({
 			x: i / starCount,
 			y: Math.random(),
 			c: colors[Math.floor(Math.random() * colors.length)],
-			r: 2.65 + Math.random() * 2.35,
+			r: 2 + Math.random() * 2.35,
 			v: 0.1 + Math.random() * 0.2,
 			p: 4 + Math.round(Math.random()),
 			i: 0.1 + Math.random() * 0.2

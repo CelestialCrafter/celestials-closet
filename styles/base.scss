@@ -5,13 +5,6 @@
 @use "sizes";
 @use "sass:color";
 
-@mixin section {
-	border-radius: sizes.$rounding;
-	border: typography.$border;
-	background-color: colors.$surface;
-	padding: sizes.$spacing-l;
-}
-
 body {
 	display: flex;
 	flex-wrap: wrap;
@@ -25,12 +18,12 @@ body {
 
 canvas {
 	position: fixed;
-    display: none;
+	display: none;
 	top: 0;
 	z-index: -1;
-    --color0: #{colors.$iris};
-    --color1: #{colors.$foam};
-    --color2: #{colors.$text};
+	--color0: #{colors.$iris};
+	--color1: #{colors.$foam};
+	--color2: #{colors.$text};
 }
 
 nav {
@@ -43,14 +36,39 @@ nav {
 }
 
 aside {
+	display: grid;
+	gap: sizes.$spacing-s;
+
 	text-align: center;
 	width: 18rem;
 	height: fit-content;
 
-	div {
-		margin: 0 auto;
-		width: fit-content;
+	.profile {
+		display: grid;
+		justify-items: center;
+
+		img {
+			border-radius: 50%;
+			aspect-ratio: 1/1;
+			width: calc(sizes.$spacing-l * 4);
+		}
+
+		.status {
+            align-self: end;
+			background-color: colors.$overlay;
+			padding: sizes.$spacing-xs;
+			border-radius: sizes.$rounding;
+		}
+
+		& > * {
+			grid-area: 1/1;
+		}
 	}
+
+	// div {
+	// 	margin: 0 auto;
+	// 	width: fit-content;
+	// }
 
 	ul {
 		text-align: initial;
@@ -59,12 +77,6 @@ aside {
 	h2 {
 		color: colors.$accent;
 		margin-top: 0;
-	}
-
-	img {
-		border-radius: 50%;
-		aspect-ratio: 1/1;
-		width: calc(sizes.$spacing-l * 4);
 	}
 }
 
@@ -81,12 +93,15 @@ main {
 	}
 
 	main, aside {
-		@include section;
+		border-radius: sizes.$rounding;
+		border: typography.$border;
+		background-color: colors.$surface;
+		padding: sizes.$spacing-l;
 	}
 
-    canvas {
-      display: initial;
-    }
+	canvas {
+		display: initial;
+	}
 
 	.divider {
 		display: none;
