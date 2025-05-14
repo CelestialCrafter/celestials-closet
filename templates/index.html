@@ -3,7 +3,6 @@
 {% block head %}
 <title>cel's closet</title>
 <meta name="description" content="my website!! <3">
-<style>{{grass::include!("styles/index.scss")|safe}}</style>
 {% call super() %}
 {% endblock %}
 
@@ -19,22 +18,4 @@
 	<br>
 	feel free to message me via <a href="mailto:celestialcraftermc@gmail.com" title="this is a filtering process! i actually use discord">email</a> if you wanna chat.
 </p>
-
-
-<h2>comments</h2>
-<small>{{views}} visitor(s)</small>
-
-<br><br>
-<ul class="messages">
-	{% for message in messages %}
-	<li><span class="name">{{message.name}}:</span> {{message.content}}</li>
-	{% endfor %}
-</ul>
-<br>
-
-<form method="post">
-	<input name="name" placeholder="name..">
-	<input name="content" placeholder="message...">
-	<button>submit!</button>
-</form>
 {% endblock %}
