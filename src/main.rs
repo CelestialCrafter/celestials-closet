@@ -7,6 +7,7 @@ use std::{
     fs::{File, OpenOptions},
     io::Seek,
     net::SocketAddr,
+    sync::OnceLock,
     time::Duration,
 };
 
@@ -36,6 +37,8 @@ async fn save_loop(db: &Database, mut file: File) {
     }
 }
 
+static DATABASE: OnceLock<Database> = OnceLock::new();
+
 #[tokio::main]
 async fn main() {
     pretty_env_logger::formatted_builder()
@@ -50,11 +53,12 @@ async fn main() {
         .open("database.db")
         .expect("database file should open");
 
-    let db = Box::leak(Box::new(Database::default()));
+    let _ = DATABASE.set(Database::default());
+    let db = DATABASE.get().unwrap();
     db.load(&db_file).expect("database file should load");
     task::spawn(async { save_loop(db, db_file).await });
 
     // serve
     let host = SocketAddr::from(([0, 0, 0, 0], ARGS.port));
-    warp::serve(routes::routes(db)).run(host).await;
+    warp::serve(routes::routes()).run(host).await;
 }
