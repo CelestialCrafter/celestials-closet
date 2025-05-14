@@ -15,38 +15,17 @@ struct Resource<'a> {
     url: &'a str,
 }
 
-struct Song<'a> {
-    title: &'a str,
-    artist: &'a str,
-    url: &'a str,
-}
-
 #[derive(Template)]
 #[template(path = "personal.html")]
 struct PersonalTemplate<'a> {
-    interests: Vec<Resource<'a>>,
-    songs: Vec<Song<'a>>,
-    websites: Vec<Resource<'a>>,
+    games: Vec<Resource<'a>>,
+    music: Vec<Resource<'a>>,
+    anime_manga: Vec<Resource<'a>>,
 }
 
 async fn page() -> impl Reply {
     PersonalTemplate {
-        interests: vec![
-            Resource {
-                title: "Yorushika",
-                image: "/assets/yorushika.webp",
-                url: "https://yorushika.com",
-            },
-            Resource {
-                title: "Frieren",
-                image: "/assets/frieren.webp",
-                url: "https://frieren-anime.jp",
-            },
-            Resource {
-                title: "The Apothecary Diaries",
-                image: "/assets/apothecary-diaries.webp",
-                url: "https://kusuriyanohitorigoto.jp",
-            },
+        games: vec![
             Resource {
                 title: "NieR: Automata",
                 image: "/assets/nier.webp",
@@ -57,60 +36,80 @@ async fn page() -> impl Reply {
                 image: "/assets/needy.webp",
                 url: "https://whysoserious.jp/needy/en",
             },
-        ],
-        songs: vec![
-            Song {
-                title: "言って。",
-                artist: "Yorushika",
-                url: "https://www.youtube.com/watch?v=F64yFFnZfkI",
-            },
-            Song {
-                title: "Oceans & Engines",
-                artist: "Niki",
-                url: "https://www.youtube.com/watch?v=DropwjmHtoo",
-            },
-            Song {
-                title: "八月、某、月明かり",
-                artist: "Yorushika",
-                url: "https://open.spotify.com/track/4AK6TjpIybCTe1QphPXFn9",
-            },
-            Song {
-                title: "Anaheim",
-                artist: "Niki",
-                url: "https://open.spotify.com/track/5GoY2ioRnfQayqsNx4HaXh",
-            },
-            Song {
-                title: "へび",
-                artist: "Yorushika",
-                url: "https://open.spotify.com/track/7pk2Mx1LnlaEpxfzNhgRuz",
-            },
-            Song {
-                title: "unravel",
-                artist: "Ado",
-                url: "https://open.spotify.com/track/3uyiyeKrVPjbMdFGe9sGas",
-            },
-            Song {
-                title: "urs",
-                artist: "Niki",
-                url: "https://open.spotify.com/track/4EMTe461jubpxPqFfVA0Rp",
-            },
-        ],
-        websites: vec![
             Resource {
-                image: "",
-                title: "Regex Licensing",
-                url: "https://regexlicensing.org"
-            },
-            Resource {
-                image: "",
-                title: "Motherfucking Website",
-                url: "https://motherfuckingwebsite.com"
-            },
-            Resource {
-                image: "",
-                title: "ZeroVer",
-                url: "https://0ver.org"
+                title: "Persona 5 Royal",
+                image: "/assets/p5r.webp",
+                url: "https://persona.atlus.com/p5r",
             }
-        ]
+        ],
+        music: vec![
+            Resource {
+                title: "Yorushika",
+                image: "/assets/yorushika.webp",
+                url: "https://yorushika.com",
+            },
+            Resource {
+                title: "NIKI",
+                image: "/assets/niki.webp",
+                url: "https://nikizefanya.com",
+            },
+            Resource {
+                title: "Ado",
+                image: "/assets/ado.webp",
+                url: "http://universal-music.co.jp/ado",
+            },
+            Resource {
+                title: "ZUTOMAYO",
+                image: "/assets/zutomayo.webp",
+                url: "https://zutomayo.net",
+            },
+            Resource {
+                title: "beabadoobee",
+                image: "/assets/beabadoobee.webp",
+                url: "https://www.beabadoobee.com",
+            },
+            Resource {
+                title: "INABAKUMORI",
+                image: "/assets/inabakumori.webp",
+                url: "https://www.youtube.com/@Inabakumori",
+            }
+        ],
+        anime_manga: vec![
+            Resource {
+                title: "Frieren",
+                image: "/assets/frieren.webp",
+                url: "https://frieren-anime.jp/",
+            },
+            Resource {
+                title: "Bocchi the Rock!",
+                image: "/assets/bocchi.webp",
+                url: "https://bocchi.rocks/",
+            },
+            Resource {
+                title: "Girls Band Cry",
+                image: "/assets/gbc.webp",
+                url: "https://girls-band-cry.com/",
+            },
+            Resource {
+                title: "Lycoris Recoil",
+                image: "/assets/lycoris.webp",
+                url: "https://lycorisrecoil.com/",
+            },
+            Resource {
+                title: "Witch Hat Atelier",
+                image: "/assets/atlier.webp",
+                url: "https://tongari-anime.com/en/",
+            },
+            Resource {
+                title: "Oshi no Ko",
+                image: "/assets/onk.webp",
+                url: "https://ichigoproduction.com/",
+            },
+            Resource {
+                title: "Bloom into You",
+                image: "/assets/bloom.webp",
+                url: "https://yagakimi.fandom.com/wiki/Bloom_Into_You",
+            },
+        ],
     }
 }

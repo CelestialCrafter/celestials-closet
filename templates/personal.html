@@ -10,38 +10,51 @@
 {% block body %}
 <h1>personal</h1>
 
-<h2 style="display: inline-block">interests</h2>
-<small>..besides programming</small>
+<h2 id="development">software development</h2>
+<p>i've been writing code since 2016, exploring whatever caught my interest.<br>
+rust's my favorite, then go, javascript, and lua.<br>
+ive picked up python, nix, c#, java, and the usual web stuff along the way.<br>
+i'm also pretty comfy with containers, clouds, etc.</p>
+
+<!-- @TODO clean these 3 sections up -->
+
+<h2 id="games">games</h2>
 
 <div class="grid">
-	{% for interest in interests %}
-	<a href="{{interest.url}}">
+	{% for entry in games %}
+	<a href="{{entry.url}}">
 		<figure>
-			<img src="{{interest.image}}" alt="{{interest.title}}">
-			<figcaption>{{interest.title}}</figcaption>
+			<img src="{{entry.image}}" alt="{{entry.title}}">
+			<figcaption>{{entry.title}}</figcaption>
 		</figure>
 	</a>
 	{% endfor %}
 </div>
 
-<h2>friends</h2>
-<ul>
-	<li><a href="https://ivrry.nekoweb.org">ivory</a></li>
-</ul>
+<h2 id="music">music</h2>
 
-<h2>favorite songs</h2>
-
-<ul>
-	{% for song in songs %}
-	<li><a href="{{song.url}}">{{song.title}}</a><small> - {{song.artist}}</small></li>
+<div class="grid">
+	{% for entry in music %}
+	<a href="{{entry.url}}">
+		<figure>
+			<img src="{{entry.image}}" alt="{{entry.title}}">
+			<figcaption>{{entry.title}}</figcaption>
+		</figure>
+	</a>
 	{% endfor %}
-</ul>
+</div>
 
-<h2>cool websites</h2>
-<ul>
-	{% for website in websites %}
-	<li><a href="{{website.url}}">{{website.title}}</a></li>
+<h2 id="anime-manga">anime/manga</h2>
+
+<div class="grid">
+	{% for entry in anime_manga %}
+	<a href="{{entry.url}}">
+		<figure>
+			<img src="{{entry.image}}" alt="{{entry.title}}">
+			<figcaption>{{entry.title}}</figcaption>
+		</figure>
+	</a>
 	{% endfor %}
-</ul>
+</div>
 
 {% endblock %}
