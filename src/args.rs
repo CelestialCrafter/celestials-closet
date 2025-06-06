@@ -15,7 +15,7 @@ fn parse_args() -> Result<Args> {
     let mut args = Arguments::from_env();
 
     Ok(Args {
-        port: args.opt_value_from_str("--port")?.unwrap_or(8080),
+        port: args.opt_value_from_str("--port")?.unwrap_or(80),
         log: args.opt_value_from_str("--log")?.unwrap_or("info".to_string()),
     })
 }
