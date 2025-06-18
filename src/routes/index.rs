@@ -1,14 +1,12 @@
-use askama_warp::Template;
+use askama::Template;
 use warp::{
     filters,
-    reply::Reply,
+    reply::{html, Reply},
     Filter,
 };
 
 pub fn route() -> filters::BoxedFilter<(impl Reply,)> {
-    warp::path::end()
-        .then(page)
-        .boxed()
+    warp::path::end().then(page).boxed()
 }
 
 #[derive(Template)]
@@ -16,5 +14,5 @@ pub fn route() -> filters::BoxedFilter<(impl Reply,)> {
 struct IndexTemplate;
 
 async fn page() -> impl Reply {
-    IndexTemplate
+    html(IndexTemplate.render().expect("template should render"))
 }

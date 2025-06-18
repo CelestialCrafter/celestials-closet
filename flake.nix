@@ -12,7 +12,7 @@
             pname = "celestials-closet";
             version = "0.1.0";
             src = nixpkgs.lib.cleanSource ./.;
-            cargoHash = "sha256-DySaaJ/uqMVqTkvG/tTqozjQ0xjTaBhTyzXs+ePoI50=";
+            cargoHash = "sha256-gwcnFqVvSNBfmvoA0OZ6TKgFd/9aMU0ph+sfu+B/J2E=";
             useFetchCargoVendor = true;
             meta = {
               description = "my personal website!";
