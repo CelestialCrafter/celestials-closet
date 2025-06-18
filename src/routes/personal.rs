@@ -74,11 +74,6 @@ async fn page() -> impl Reply {
                 url: "https://zutomayo.net",
             },
             Resource {
-                title: "beabadoobee",
-                image: "/assets/beabadoobee.webp",
-                url: "https://www.beabadoobee.com",
-            },
-            Resource {
                 title: "INABAKUMORI",
                 image: "/assets/inabakumori.webp",
                 url: "https://www.youtube.com/@Inabakumori",
