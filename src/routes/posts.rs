@@ -1,6 +1,11 @@
-use askama_warp::Template;
+use askama::Template;
 use eyre::Result;
-use warp::{filters::BoxedFilter, path, reject, reply::Reply, Filter};
+use warp::{
+    filters::BoxedFilter,
+    path, reject,
+    reply::{html, Reply},
+    Filter,
+};
 
 include!(concat!(env!("OUT_DIR"), "/posts.rs"));
 
@@ -24,14 +29,22 @@ struct PostsTemplate<'a> {
 }
 
 async fn listing() -> impl Reply {
-    PostsTemplate {
-        posts: POSTS.values().collect(),
-    }
+    html(
+        PostsTemplate {
+            posts: POSTS.values().collect(),
+        }
+        .render()
+        .expect("template should render"),
+    )
 }
 
 async fn post(name: String) -> Result<impl Reply, reject::Rejection> {
     match POSTS.get(name.as_str()) {
-        Some(post) => Ok(PostTemplate { post }),
+        Some(post) => Ok(html(
+            PostTemplate { post }
+                .render()
+                .expect("template should render"),
+        )),
         None => Err(reject::not_found()),
     }
 }

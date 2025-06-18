@@ -5,7 +5,6 @@ use std::{
 
 use eyre::{eyre, ErrReport, Result};
 use proc_macro2::Literal;
-use walkdir::WalkDir;
 
 use crate::{escape, hashmap};
 
@@ -15,13 +14,9 @@ pub fn pack_assets() -> Result<()> {
     println!("cargo::rerun-if-changed={}", ASSETS_DIR);
 
     let assets_path = env::current_dir()?.join(ASSETS_DIR);
-    let entries = WalkDir::new(assets_path.clone())
-        .into_iter()
-        .filter_entry(|entry| !entry.path().is_dir())
-        .map(|entry| {
-            let entry = entry?;
-            let path = entry.path();
-
+    let entries = fs::read_dir(assets_path.clone())?
+        .filter_map(|entry| entry.ok().map(|e| e.path()))
+        .map(|path| {
             let name = path
                 .file_name()
                 .ok_or(eyre!("path does not have file name"))?
@@ -29,7 +24,7 @@ pub fn pack_assets() -> Result<()> {
                 .ok_or(eyre!("file name is not utf-8"))?;
 
             Ok(format!(
-                "({}, {})",
+                "({}, {}.as_slice())",
                 escape(name),
                 Literal::byte_string(&fs::read(path)?)
             ))

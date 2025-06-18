@@ -1,9 +1,9 @@
 use std::fmt;
 
-use askama_warp::Template;
+use askama::Template;
 use warp::{
     filters::{path::path, BoxedFilter},
-    reply::Reply,
+    reply::{html, Reply},
     Filter,
 };
 
@@ -56,7 +56,7 @@ struct ProjectsTemplate<'a> {
 }
 
 async fn page() -> impl Reply {
-    ProjectsTemplate {
+    html(ProjectsTemplate {
         projects: vec![
             Project {
                 title: "celestials-closet",
@@ -109,5 +109,5 @@ async fn page() -> impl Reply {
                 images: None,
             },
         ],
-    }
+    }.render().expect("template should render"))
 }

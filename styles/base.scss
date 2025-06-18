@@ -65,10 +65,11 @@ aside {
 		}
 	}
 
-	// div {
-	// 	margin: 0 auto;
-	// 	width: fit-content;
-	// }
+    .profile-links {
+      display: flex;
+      flex-direction: column;
+      gap: sizes.$spacing-xs;
+    }
 
 	ul {
 		text-align: initial;

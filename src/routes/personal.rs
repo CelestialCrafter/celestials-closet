@@ -1,7 +1,7 @@
-use askama_warp::Template;
+use askama::Template;
 use warp::{
     filters::{path::path, BoxedFilter},
-    reply::Reply,
+    reply::{html, Reply},
     Filter,
 };
 
@@ -24,7 +24,7 @@ struct PersonalTemplate<'a> {
 }
 
 async fn page() -> impl Reply {
-    PersonalTemplate {
+    html(PersonalTemplate {
         games: vec![
             Resource {
                 title: "NieR: Automata",
@@ -106,5 +106,5 @@ async fn page() -> impl Reply {
                 url: "https://yagakimi.fandom.com/wiki/Bloom_Into_You",
             },
         ],
-    }
+    }.render().expect("template should render"))
 }

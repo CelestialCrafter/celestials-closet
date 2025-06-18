@@ -1,32 +1,24 @@
 use warp::{
     filters::{
-        fs::dir,
-        path::{path, Tail},
+        path::{path, tail, Tail},
         BoxedFilter,
     },
-    reject,
-    reply::Reply,
-    Filter,
+    reject, reply, Filter,
 };
 
 include!(concat!(env!("OUT_DIR"), "/assets.rs"));
 
-pub fn route() -> BoxedFilter<(impl Reply,)> {
+pub fn route() -> BoxedFilter<(impl reply::Reply,)> {
     path("assets")
-        .and(dir("assets"))
-        .map(|reply| {
-            warp::reply::with_header(
-                reply,
+        .and(tail())
+        .and_then(async |tail: Tail| match ASSETS.get(tail.as_str()) {
+            Some(data) => Ok(reply::with_header(
+                *data,
                 "Cache-Control",
                 format!("max-age={}", 60 * 60 * 24 * 30),
-            )
+            )),
+
+            None => Err(reject::not_found()),
         })
         .boxed()
-}
-
-pub async fn page(tail: Tail) -> Result<impl Reply, reject::Rejection> {
-    match ASSETS.get(tail.as_str()) {
-        Some(data) => Ok(*data),
-        None => Err(reject::not_found()),
-    }
 }
