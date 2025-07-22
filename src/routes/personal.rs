@@ -28,17 +28,17 @@ async fn page() -> impl Reply {
         games: vec![
             Resource {
                 title: "NieR: Automata",
-                image: "/assets/nier.webp",
+                image: "/assets/nier-automata.webp",
                 url: "https://nierautomata.square-enix-games.com",
             },
             Resource {
                 title: "NEEDY STREAMER OVERLOAD",
-                image: "/assets/needy.webp",
+                image: "/assets/needy-streamer-overload.webp",
                 url: "https://whysoserious.jp/needy/en",
             },
             Resource {
                 title: "Persona 5 Royal",
-                image: "/assets/p5r.webp",
+                image: "/assets/persona-5-royal.webp",
                 url: "https://persona.atlus.com/p5r",
             }
         ],
@@ -77,33 +77,28 @@ async fn page() -> impl Reply {
             },
             Resource {
                 title: "Bocchi the Rock!",
-                image: "/assets/bocchi.webp",
+                image: "/assets/bocchi-the-rock.webp",
                 url: "https://bocchi.rocks/",
             },
             Resource {
                 title: "Girls Band Cry",
-                image: "/assets/gbc.webp",
+                image: "/assets/girls-band-cry.webp",
                 url: "https://girls-band-cry.com/",
             },
             Resource {
                 title: "Lycoris Recoil",
-                image: "/assets/lycoris.webp",
+                image: "/assets/lycoris-recoil.webp",
                 url: "https://lycorisrecoil.com/",
             },
             Resource {
                 title: "Witch Hat Atelier",
-                image: "/assets/atlier.webp",
+                image: "/assets/witch-hat-atlier.webp",
                 url: "https://tongari-anime.com/en/",
             },
             Resource {
                 title: "Oshi no Ko",
-                image: "/assets/onk.webp",
+                image: "/assets/oshi-no-ko.webp",
                 url: "https://ichigoproduction.com/",
-            },
-            Resource {
-                title: "Bloom into You",
-                image: "/assets/bloom.webp",
-                url: "https://yagakimi.fandom.com/wiki/Bloom_Into_You",
             },
         ],
     }.render().expect("template should render"))

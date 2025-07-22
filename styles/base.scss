@@ -54,10 +54,7 @@ aside {
     display: flex;
     flex-direction: column;
     justify-content: center;
-
-    span {
-      justify-self: initial;
-    }
+    gap: sizes.$spacing-xs;
   }
 }
 

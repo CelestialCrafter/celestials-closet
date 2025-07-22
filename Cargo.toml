@@ -15,6 +15,7 @@ tree-sitter-html = "0.23.2"
 html-escape = "0.2.13"
 toml = "0.8.20"
 pulldown-cmark-escape = { version = "0.11.0", features = ["simd"] }
+image = { version = "0.25.6", default-features = false, features = ["webp", "png", "jpeg"] }
 
 [dependencies]
 askama = "0.14.0"

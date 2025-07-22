@@ -49,7 +49,7 @@
       };
       window.onresize();
 
-      const starCount = 256;
+      const starCount = 128;
       const stars = Array.from({ length: starCount }, (_, i) => ({
         x: i / starCount,
         y: Math.random(),
@@ -93,7 +93,9 @@
         requestAnimationFrame(animateStar);
       };
 
-      requestAnimationFrame(animateStar);
+      if (requestIdleCallback)
+        requestIdleCallback(animateStar, { timeout: 250 });
+      else animateStar();
     </script>
   </body>
 </html>
