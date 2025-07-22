@@ -1,118 +1,99 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/assets/profile.webp" />
 
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="icon" href="/assets/profile.webp" />
+    <style>
+      {{grass::include!("styles/base.scss")|safe}}
+    </style>
+    {% block head %}{% endblock %}
+  </head>
 
-	<style>{{grass::include!("styles/base.scss")|safe}}</style>
-	{% block head %}
-	{% include "oneko.html" %}
-	{% endblock %}
-</head>
+  <body>
+    <canvas></canvas>
 
-<body>
-	<canvas></canvas>
+    <nav>
+      <a href="/">celestials-closet</a>
+      <a href="/posts">~/posts</a>
+      <a href="/projects">~/projects</a>
+      <a href="/personal">~/personal</a>
+    </nav>
 
-	<nav>
-		<a href="/">celestials@closet</a>
-		<a href="/posts">~/posts</a>
-		<a href="/projects">~/projects</a>
-		<a href="/personal">~/personal</a>
-	</nav>
+    <aside>
+      <img src="/assets/profile.webp" alt="Celestial" />
 
-	<aside>
-		<div class="profile">
-			<img src="/assets/profile.webp" alt="Celestial">
-			<span class="status">loading weights...</span>
-		</div>
+      <ul>
+        <li><a href="https://github.com/CelestialCrafter">code</a></li>
+        <li><a href="mailto:celestialcraftermc@gmail.com">email</a></li>
+        <li><a href="/assets/ed25519.txt">ed25519</a></li>
+      </ul>
+    </aside>
 
-		<div>
-			<h2>celestial</h2>
-			<small>{{crate::DATABASE.get().unwrap().read().unwrap().len()}} site views</small>
-			<ul class="profile-links">
-				<li><a href="https://github.com/CelestialCrafter">code</a></li>
-				<li><a href="mailto:celestialcraftermc@gmail.com">email</a></li>
-				<li><a href="/assets/ed25519.txt">ed25519</a></li>
-			</ul>
-		</div>
-	</aside>
+    <hr class="divider" />
 
-	<hr class="divider">
+    <main>{% block body %}{% endblock %}</main>
 
-	<main>
-	{% block body %}{% endblock %}
-	</main>
+    <script>
+      const canvas = document.querySelector("canvas");
+      const divider = document.querySelector(".divider");
+      const colors = Array.from({ length: 3 }, (_, i) =>
+        window.getComputedStyle(canvas).getPropertyValue("--color" + i),
+      );
+      const ctx = canvas.getContext("2d");
 
-	<script>
-		const status = document.querySelector(".status");
-		const statuses = [
-			"nixos btw :3",
-			"stack smashing detected",
-			"<a href=\"https://reddit.com/r/unixporn\">cooking rice</a>"
-		];
+      window.onresize = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = divider.offsetTop;
+      };
+      window.onresize();
 
-		status.innerHTML = statuses[Math.floor(Math.random() * statuses.length)];
-	</script>
+      const starCount = 256;
+      const stars = Array.from({ length: starCount }, (_, i) => ({
+        x: i / starCount,
+        y: Math.random(),
+        c: colors[Math.floor(Math.random() * colors.length)],
+        r: 2 + Math.random() * 2.35,
+        v: 0.1 + Math.random() * 0.2,
+        p: 4 + Math.round(Math.random()),
+        i: 0.1 + Math.random() * 0.2,
+      }));
 
-	<script>
-		const canvas = document.querySelector("canvas");
-		const colors = Array.from({ length: 3 }, (_, i) => window.getComputedStyle(canvas).getPropertyValue("--color" + i));
-		const ctx = canvas.getContext("2d");
-	
-		window.onresize = () => {
-			canvas.width = window.innerWidth;
-			canvas.height = window.innerHeight * 0.75;
-		};
-		window.onresize();
-		
-		const starCount = 256;
-		const stars = Array.from({ length: starCount }, (_, i) => ({
-			x: i / starCount,
-			y: Math.random(),
-			c: colors[Math.floor(Math.random() * colors.length)],
-			r: 2 + Math.random() * 2.35,
-			v: 0.1 + Math.random() * 0.2,
-			p: 4 + Math.round(Math.random()),
-			i: 0.1 + Math.random() * 0.2
-		}));
-	
-		ctx.shadowBlur = 2;
-		const animateStar = () => {
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
-	
-			for (const star of stars) {
-				star.y += star.v / canvas.height;
-				star.x += star.v / canvas.width;
-				if (star.x > 1) star.x = 0;
-				if (star.y > 1) star.y = 0;
-	
-				ctx.fillStyle = star.c;
-				ctx.shadowColor = star.c;
-				ctx.globalAlpha = (1 - star.y) * 0.5;
-	
-				const y = star.y * canvas.height;
-				const x = star.x * canvas.width;
-	
-				ctx.beginPath();
-	
-				const step = Math.PI / star.p;
-				for (let i = 0; i < 2 * star.p; i++) {
-					const r = i % 2 === 0 ? star.r : star.r * star.i;
-					const a = i * step;
-					ctx.lineTo(x + Math.cos(a) * r, y + Math.sin(a) * r);
-				}
-	
-				ctx.closePath();
-				ctx.fill();
-			}
-	
-			requestAnimationFrame(animateStar)
-		};
-		
-		requestAnimationFrame(animateStar);
-	</script>
-</body>
+      ctx.shadowBlur = 2;
+      const animateStar = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+        for (const star of stars) {
+          star.y += star.v / canvas.height;
+          star.x += star.v / canvas.width;
+          if (star.x > 1) star.x = 0;
+          if (star.y > 1) star.y = 0;
+
+          ctx.fillStyle = star.c;
+          ctx.shadowColor = star.c;
+          ctx.globalAlpha = (1 - star.y) * 0.5;
+
+          const y = star.y * canvas.height;
+          const x = star.x * canvas.width;
+
+          ctx.beginPath();
+
+          const step = Math.PI / star.p;
+          for (let i = 0; i < 2 * star.p; i++) {
+            const r = i % 2 === 0 ? star.r : star.r * star.i;
+            const a = i * step;
+            ctx.lineTo(x + Math.cos(a) * r, y + Math.sin(a) * r);
+          }
+
+          ctx.closePath();
+          ctx.fill();
+        }
+
+        requestAnimationFrame(animateStar);
+      };
+
+      requestAnimationFrame(animateStar);
+    </script>
+  </body>
 </html>

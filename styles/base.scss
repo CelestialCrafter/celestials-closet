@@ -6,105 +6,58 @@
 @use "sass:color";
 
 body {
-	display: flex;
-	flex-wrap: wrap;
-	flex-direction: column;
-	align-items: center;
-	gap: sizes.$spacing-m;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  gap: sizes.$spacing-m;
 
-	background-color: colors.$base;
-	padding: sizes.$spacing-m;
-}
-
-canvas {
-	position: fixed;
-	display: none;
-	top: 0;
-	z-index: -1;
-	--color0: #{colors.$iris};
-	--color1: #{colors.$foam};
-	--color2: #{colors.$text};
-}
-
-nav {
-	text-align: center;
-	width: 100%;
-
-	a:first-child {
-		color: colors.$accent;
-	}
-}
-
-aside {
-	display: grid;
-	gap: sizes.$spacing-s;
-
-	text-align: center;
-	width: 18rem;
-	height: fit-content;
-
-	.profile {
-		display: grid;
-		justify-items: center;
-
-		img {
-			border-radius: 50%;
-			aspect-ratio: 1/1;
-			width: calc(sizes.$spacing-l * 4);
-		}
-
-		.status {
-            align-self: end;
-			background-color: colors.$overlay;
-			padding: sizes.$spacing-xs;
-			border-radius: sizes.$rounding;
-		}
-
-		& > * {
-			grid-area: 1/1;
-		}
-	}
-
-    .profile-links {
-      display: flex;
-      flex-direction: column;
-      gap: sizes.$spacing-xs;
-    }
-
-	ul {
-		text-align: initial;
-	}
-
-	h2 {
-		color: colors.$accent;
-		margin-top: 0;
-	}
+  background-color: colors.$base;
+  padding: sizes.$spacing-m;
 }
 
 main {
-	max-width: 48rem;
-	flex: 1;
+  max-width: 48rem;
+  flex: 1;
 }
 
-@media (min-width: 52rem) {
-	body {
-		flex-direction: inherit;
-		align-items: inherit;
-		justify-content: center;
-	}
-
-	main, aside {
-		border-radius: sizes.$rounding;
-		border: typography.$border;
-		background-color: colors.$surface;
-		padding: sizes.$spacing-l;
-	}
-
-	canvas {
-		display: initial;
-	}
-
-	.divider {
-		display: none;
-	}
+canvas {
+  z-index: -1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  --color0: #{colors.$iris};
+  --color1: #{colors.$foam};
+  --color2: #{colors.$text};
 }
+
+nav {
+  text-align: center;
+
+  a:first-child {
+    color: colors.$accent;
+  }
+}
+
+aside {
+  display: flex;
+  gap: sizes.$spacing-s;
+  margin: sizes.$spacing-l;
+
+  img {
+    border-radius: 50%;
+    aspect-ratio: 1/1;
+    width: calc(sizes.$spacing-l * 4);
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    span {
+      justify-self: initial;
+    }
+  }
+}
+
