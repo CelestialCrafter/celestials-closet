@@ -39,10 +39,10 @@ const HIGHLIGHT_NAMES: &[&str] = &[
 ];
 
 macro_rules! highlight_config {
-    ($(($global_name:ident, $lang_name:expr, $lang_fn:expr, $hl_query:expr, $inject_query:expr, $local_query: expr)),*) => {
+    ($(($global_name:ident, $lang_name:expr, $lang:expr, $hl_query:expr, $inject_query:expr, $local_query: expr)),*) => {
         $(static $global_name: LazyLock<HighlightConfiguration> = LazyLock::new(|| {
             let mut config = HighlightConfiguration::new(
-                $lang_fn.into(),
+                $lang,
                 $lang_name,
                 $hl_query,
                 $inject_query,
@@ -68,7 +68,7 @@ highlight_config!(
     (
         RUST_CONFIG,
         "rust",
-        tree_sitter_rust::LANGUAGE,
+        tree_sitter_rust::LANGUAGE.into(),
         tree_sitter_rust::HIGHLIGHTS_QUERY,
         tree_sitter_rust::INJECTIONS_QUERY,
         ""
@@ -76,10 +76,42 @@ highlight_config!(
     (
         JS_CONFIG,
         "javascript",
-        tree_sitter_javascript::LANGUAGE,
+        tree_sitter_javascript::LANGUAGE.into(),
         tree_sitter_javascript::HIGHLIGHT_QUERY,
         tree_sitter_javascript::INJECTIONS_QUERY,
         tree_sitter_javascript::LOCALS_QUERY
+    ),
+    (
+        LUA_CONFIG,
+        "lua",
+        tree_sitter_lua::LANGUAGE.into(),
+        tree_sitter_lua::HIGHLIGHTS_QUERY,
+        tree_sitter_lua::INJECTIONS_QUERY,
+        tree_sitter_lua::LOCALS_QUERY
+    ),
+    (
+        FISH_CONFIG,
+        "fish",
+        tree_sitter_fish::language(),
+        tree_sitter_fish::HIGHLIGHTS_QUERY,
+        "",
+        ""
+    ),
+    (
+        NIX_CONFIG,
+        "nix",
+        tree_sitter_nix::LANGUAGE.into(),
+        tree_sitter_nix::HIGHLIGHTS_QUERY,
+        tree_sitter_nix::INJECTIONS_QUERY,
+        ""
+    ),
+    (
+        HTML_CONFIG,
+        "html",
+        tree_sitter_html::LANGUAGE.into(),
+        tree_sitter_html::HIGHLIGHTS_QUERY,
+        tree_sitter_html::INJECTIONS_QUERY,
+        ""
     )
 );
 
@@ -101,7 +133,7 @@ fn highlight_code<'a>(
         match event {
             HighlightEvent::Source { start, end } => escape_html(&mut html, &code[start..end]),
             HighlightEvent::HighlightStart(highlight) => {
-                write!(html, "<span class=\"{}\"/>", HIGHLIGHT_NAMES[highlight.0])
+                write!(html, "<span class=\"{}\">", HIGHLIGHT_NAMES[highlight.0])
             }
             HighlightEvent::HighlightEnd => write!(html, "</span>"),
         }
