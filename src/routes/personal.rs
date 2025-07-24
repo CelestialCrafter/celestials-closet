@@ -1,8 +1,8 @@
 use askama::Template;
 use warp::{
-    filters::{path::path, BoxedFilter},
-    reply::{html, Reply},
     Filter,
+    filters::{BoxedFilter, path::path},
+    reply::{Reply, html},
 };
 
 pub fn route() -> BoxedFilter<(impl Reply,)> {
@@ -24,82 +24,101 @@ struct PersonalTemplate<'a> {
 }
 
 async fn page() -> impl Reply {
-    html(PersonalTemplate {
-        games: vec![
-            Resource {
-                title: "NieR: Automata",
-                image: "/assets/nier-automata.webp",
-                url: "https://nierautomata.square-enix-games.com",
-            },
-            Resource {
-                title: "NEEDY STREAMER OVERLOAD",
-                image: "/assets/needy-streamer-overload.webp",
-                url: "https://whysoserious.jp/needy/en",
-            },
-            Resource {
-                title: "Persona 5 Royal",
-                image: "/assets/persona-5-royal.webp",
-                url: "https://persona.atlus.com/p5r",
-            }
-        ],
-        music: vec![
-            Resource {
-                title: "Yorushika",
-                image: "/assets/yorushika.webp",
-                url: "https://yorushika.com",
-            },
-            Resource {
-                title: "NIKI",
-                image: "/assets/niki.webp",
-                url: "https://nikizefanya.com",
-            },
-            Resource {
-                title: "Ado",
-                image: "/assets/ado.webp",
-                url: "http://universal-music.co.jp/ado",
-            },
-            Resource {
-                title: "ZUTOMAYO",
-                image: "/assets/zutomayo.webp",
-                url: "https://zutomayo.net",
-            },
-            Resource {
-                title: "INABAKUMORI",
-                image: "/assets/inabakumori.webp",
-                url: "https://www.youtube.com/@Inabakumori",
-            }
-        ],
-        anime_manga: vec![
-            Resource {
-                title: "Frieren",
-                image: "/assets/frieren.webp",
-                url: "https://frieren-anime.jp/",
-            },
-            Resource {
-                title: "Bocchi the Rock!",
-                image: "/assets/bocchi-the-rock.webp",
-                url: "https://bocchi.rocks/",
-            },
-            Resource {
-                title: "Girls Band Cry",
-                image: "/assets/girls-band-cry.webp",
-                url: "https://girls-band-cry.com/",
-            },
-            Resource {
-                title: "Lycoris Recoil",
-                image: "/assets/lycoris-recoil.webp",
-                url: "https://lycorisrecoil.com/",
-            },
-            Resource {
-                title: "Witch Hat Atelier",
-                image: "/assets/witch-hat-atlier.webp",
-                url: "https://tongari-anime.com/en/",
-            },
-            Resource {
-                title: "Oshi no Ko",
-                image: "/assets/oshi-no-ko.webp",
-                url: "https://ichigoproduction.com/",
-            },
-        ],
-    }.render().expect("template should render"))
+    html(
+        PersonalTemplate {
+            games: vec![
+                Resource {
+                    title: "NieR: Automata",
+                    image: "/assets/nier-automata.webp",
+                    url: "https://nierautomata.square-enix-games.com",
+                },
+                Resource {
+                    title: "NEEDY STREAMER OVERLOAD",
+                    image: "/assets/needy-streamer-overload.webp",
+                    url: "https://whysoserious.jp/needy/en",
+                },
+                Resource {
+                    title: "Persona 5 Royal",
+                    image: "/assets/persona-5-royal.webp",
+                    url: "https://persona.atlus.com/p5r",
+                },
+            ],
+            music: vec![
+                Resource {
+                    title: "Yorushika",
+                    image: "/assets/yorushika.webp",
+                    url: "https://yorushika.com",
+                },
+                Resource {
+                    title: "NIKI",
+                    image: "/assets/niki.webp",
+                    url: "https://nikizefanya.com",
+                },
+                Resource {
+                    title: "beabadoobee",
+                    image: "/assets/beabadoobee.webp",
+                    url: "https://www.beabadoobee.com",
+                },
+                Resource {
+                    title: "Ado",
+                    image: "/assets/ado.webp",
+                    url: "http://universal-music.co.jp/ado",
+                },
+                Resource {
+                    title: "ZUTOMAYO",
+                    image: "/assets/zutomayo.webp",
+                    url: "https://zutomayo.net",
+                },
+                Resource {
+                    title: "INABAKUMORI",
+                    image: "/assets/inabakumori.webp",
+                    url: "https://www.youtube.com/@Inabakumori",
+                },
+                Resource {
+                    title: "Iyowa",
+                    image: "/assets/iyowa.webp",
+                    url: "https://www.youtube.com/@igusuri_please",
+                },
+            ],
+            anime_manga: vec![
+                Resource {
+                    title: "Frieren",
+                    image: "/assets/frieren.webp",
+                    url: "https://frieren-anime.jp/",
+                },
+                Resource {
+                    title: "Bocchi the Rock!",
+                    image: "/assets/bocchi-the-rock.webp",
+                    url: "https://bocchi.rocks/",
+                },
+                Resource {
+                    title: "Girls Band Cry",
+                    image: "/assets/girls-band-cry.webp",
+                    url: "https://girls-band-cry.com/",
+                },
+                Resource {
+                    title: "Lycoris Recoil",
+                    image: "/assets/lycoris-recoil.webp",
+                    url: "https://lycorisrecoil.com/",
+                },
+                Resource {
+                    title: "Witch Hat Atelier",
+                    image: "/assets/witch-hat-atlier.webp",
+                    url: "https://tongari-anime.com/en/",
+                },
+                Resource {
+                    title: "Oshi no Ko",
+                    image: "/assets/oshi-no-ko.webp",
+                    url: "https://ichigoproduction.com/",
+                },
+                Resource {
+                    title: "The Mimosa Confessions ",
+                    image: "/assets/mimosa-confessions.webp",
+                    url: "https://sevenseasentertainment.com/series/the-mimosa-confessions-light-novel/",
+                }
+            ],
+        }
+        .render()
+        .expect("template should render"),
+    )
 }
