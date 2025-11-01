@@ -11,26 +11,12 @@
 
 <h2 id="development">software development</h2>
 <p>
-	i've been writing code since 2016, doing what seemed interesting.<br>
-	rust's my favorite language, then go, javascript, and lua.<br>
-	i've also learned python, nix, c, c#, java, and the standard web stuff (html, css, react, svelte, ect)<br>
-	im also familiar with networking, containers, aws, gcp, etc.
+	i've been programming since 2016, just doing what seemed interesting.<br>
+	over the years, i learned python, c, java, the standard web stuff, and a lot more.<br>
+	i also like networking, hardware, and linux!
 </p>
 
 <!-- @TODO clean these 3 sections up -->
-
-<h2 id="games">games</h2>
-
-<div class="grid">
-	{% for entry in games %}
-	<a href="{{entry.url}}">
-		<figure>
-			<img src="{{entry.image}}" alt="game picture for {{entry.title}}">
-			<figcaption>{{entry.title}}</figcaption>
-		</figure>
-	</a>
-	{% endfor %}
-</div>
 
 <h2 id="music">music</h2>
 
@@ -57,5 +43,4 @@
 	</a>
 	{% endfor %}
 </div>
-
 {% endblock %}
