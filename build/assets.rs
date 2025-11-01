@@ -38,9 +38,10 @@ pub fn pack_assets() -> Result<()> {
                     .map_err(|err| eyre!("could not parse optimization level: {err}")),
                 None => Err(eyre!("asset did not have optimization level")),
             }?;
+            path.set_extension("");
 
             match opt_level {
-                0 => {}
+                0 => (),
                 1 | 2 => {
                     let mut img = ImageReader::new(Cursor::new(&buffer))
                         .with_guessed_format()?
@@ -52,8 +53,6 @@ pub fn pack_assets() -> Result<()> {
                     buffer.clear();
                     img.write_with_encoder(WebPEncoder::new_lossless(&mut buffer))?;
 
-                    // remove the .opt-<level> extension, then change the filename extension to webp
-                    path.set_extension("");
                     path.set_extension("webp");
                 }
                 _ => return Err(eyre!("optimization level {opt_level} is unsupported")),
