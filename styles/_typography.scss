@@ -5,14 +5,20 @@
 $border: sizes.$border solid colors.$highlight-high;
 
 @font-face {
-  font-family: cherry;
+  font-family: quicksand;
   font-display: swap;
-  src: url(/assets/cherry.woff2);
+  src: url(/assets/quicksand.woff2);
+}
+
+@font-face {
+  font-family: jetbrains-mono;
+  font-display: swap;
+  src: url(/assets/jetbrains-mono.woff2);
 }
 
 html {
   color: colors.$text;
-  font-family: cherry, sans-serif;
+  font-family: quicksand, sans-serif;
   font-size: sizes.$text;
   line-height: 1.3;
 }
@@ -154,7 +160,7 @@ table {
 }
 
 code {
-  font-family: cherry, monospace;
+  font-family: jetbrains-mono, quicksand, monospace;
   background-color: colors.$overlay;
   line-height: 1.1;
 }
