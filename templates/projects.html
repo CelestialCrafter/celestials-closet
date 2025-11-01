@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block body %}
-<h1>projects <small>(the good ones)</small></h1>
+<h1>projects</h1>
 {% for project in projects %}
 <div>
 	<a href="{{project.url}}"><h2>{{project.title}}</h2></a>
@@ -17,9 +17,9 @@
 		<small>made w/ {{format!("{}", project.language)}}</small>
 		{% endif %}
 	</p>
-	{% if let Some(images) = project.images %}
+	{% if !project.images.is_empty() %}
 	<div class="gallery">
-		{% for image in images %}
+		{% for image in project.images %}
 		<img src="{{image}}" />
 		{% endfor %}
 	</div>

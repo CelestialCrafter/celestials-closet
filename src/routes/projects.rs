@@ -46,7 +46,7 @@ struct Project<'a> {
     description: &'a str,
     url: &'a str,
     language: Language<'a>,
-    images: Option<&'a [&'a str]>,
+    images: &'a [&'a str],
 }
 
 #[derive(Template)]
@@ -59,54 +59,46 @@ async fn page() -> impl Reply {
     html(ProjectsTemplate {
         projects: vec![
             Project {
+              title: "xuehua",
+              description: "package manager/distro inspired by nixpkgs/nixos",
+              url: "https://github.com/CelestialCrafter/xuehua",
+              language: "Rust".into(),
+              images: &[]
+            },
+            Project {
                 title: "celestials-closet",
                 description: "my personal website!",
                 url: "https://github.com/CelestialCrafter/celestials-closet",
                 language: "Rust".into(),
-                images: None,
+                images: &[],
             },
             Project {
                 title: "dotfiles",
                 description: "my dotfiles!",
                 url: "https://github.com/CelestialCrafter/dotfiles",
                 language: Language::default(),
-                images: Some(&["/assets/dotfiles-1.webp", "/assets/dotfiles-2.webp"]),
+                images: &["/assets/dotfiles-1.webp", "/assets/dotfiles-2.webp"],
             },
             Project {
                 title: "games",
                 description: "a collection of games playable over ssh!",
                 url: "https://github.com/CelestialCrafter/games",
                 language: "Go".into(),
-                images: None,
+                images: &[],
             },
             Project {
                 title: "crawler",
                 description: "web crawler!",
                 url: "https://github.com/CelestialCrafter/crawler",
                 language: "Go".into(),
-                images: None,
+                images: &[],
             },
             Project {
                 title: "fenlu",
                 description: "simple and extensible all-purpose media organizer inspired by qimgv",
                 url: "https://github.com/CelestialCrafter/fenlu",
                 language: ["Go", "Rust", "Python"].into(),
-                images: None,
-            },
-            Project {
-                title: "koharu",
-                description: "System for ComputerCraft",
-                url: "https://github.com/CelestialCrafter/koharu",
-                language: "Lua".into(),
-                images: None,
-            },
-            Project {
-                title: "rp-client",
-                description:
-                    "Uses Discord RPC to display what you're doing and a status to go along with it",
-                url: "https://github.com/CelestialCrafter/rp-client",
-                language: "Javascript".into(),
-                images: None,
+                images: &[],
             },
         ],
     }.render().expect("template should render"))
