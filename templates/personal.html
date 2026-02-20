@@ -1,40 +1,40 @@
 {% extends "base.html" %}
 
 {% block head %}
-<title>cel's closet - personal</title>
-<meta name="description" content="stuff about me <3">
+<title>Celestial's Closet - Personal</title>
+<meta name="description" content="Stuff about me! <3">
 <style>{{grass::include!("styles/personal.scss")|safe}}</style>
 {% endblock %}
 
 {% block body %}
-<h1>personal</h1>
+<h1>Personal</h1>
 
-<h2 id="development">software development</h2>
+<h2 id="development">Software Development</h2>
 <p>
-	i've been programming since 2016, and i'm interested in rust, linux, and networking<br>
-	while programming, i've also learned python, c, java, javascript, and other many languages.<br>
+	I've been programming since 2016, and I'm mainly interested in Rust & Linux.<br>
+	Other than that, I also like Lua, Networking, Hardware, and Operating Systems.<br>
 </p>
 
-<h2 id="music">music</h2>
+<h2 id="music">Music</h2>
 
 <div class="grid">
 	{% for entry in music %}
 	<a href="{{entry.url}}">
 		<figure>
-			<img src="{{entry.image}}" alt="artist picture for {{entry.title}}">
+			<img src="{{entry.image}}" alt="{{entry.title}}">
 			<figcaption>{{entry.title}}</figcaption>
 		</figure>
 	</a>
 	{% endfor %}
 </div>
 
-<h2 id="anime-manga">anime/manga</h2>
+<h2 id="anime-manga">Anime/Manga</h2>
 
 <div class="grid">
 	{% for entry in anime_manga %}
 	<a href="{{entry.url}}">
 		<figure>
-			<img src="{{entry.image}}" alt="anime/manga picture for {{entry.title}}">
+			<img src="{{entry.image}}" alt="{{entry.title}}">
 			<figcaption>{{entry.title}}</figcaption>
 		</figure>
 	</a>

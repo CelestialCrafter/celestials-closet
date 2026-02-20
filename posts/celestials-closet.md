@@ -1,39 +1,38 @@
 ---
-title = "building my website!"
-summary = "going over my website's features, and how i built them"
+title = "Building my Website!"
+summary = "Going over my website's features, and how I built them."
 date = 2025-04-10
 id = "celestials-closet"
 ---
 
-## motivation
+## Motivation
 
-i went into this project with a few things in mind:
+I went into this project with a few things in mind:
 
-- if something seems fun to write, i'll write it from scratch. it helps me learn, and it makes things more enjoyable overall.
-- keep it simple, small, efficient, and fast.
-- also, i wanted to see if i could pack the entire website into a single binary
+- If something seems fun to write, I'll write it from scratch.
+  It helps me learn, and makes things more enjoyable overall
+- Keep the site simple, small, efficient, and fast
+- I also wanted to see if I could pack the entire website into a single binary
 
-## routing
+## Routing
 
-for routing, i used [warp](https://crates.io/crates/warp).
-it's super simple, fast, and has the perfect amount of features.
+For routing, I used [warp](https://crates.io/crates/warp).
+It's simple, fast, and has the perfect amount of features.
 
-instead of the classic routing done in things like [actix](https://actix.rs/) or [express](https://expressjs.com/),
-warp represents all routing and transformations as data, within the rust type system.
+Instead of the classic routing done in things like [actix](https://actix.rs/) or [express](https://expressjs.com/),
+warp represents all routing and transformations as data, within the Rust type system.
 
-its main abstraction is the [Filter](https://docs.rs/warp/latest/warp/trait.Filter.html), which is
-a composable piece of logic that takes in http requests,
-and can output either a value (that gets passed down)
-or a rejection (which means it doesn't match, and lets a different filter handle the request)
+It's main abstraction is the
+[Filter](https://docs.rs/warp/latest/warp/trait.Filter.html), which is a
+composable piece of logic that takes in http requests, and can output either
+a value (that gets passed down) or a rejection (which lets a different filter
+handle the request).
 
-and since filters are:
-
-- represented as a type
-- composable (via `.and()`, `.or()`, `.map()`, etc)
-  your entire routing tree is typed!
+Since filters are both represented as a type and composable (via `.and()`,
+`.or()`, `.map()`, etc), the entire routing tree is typed!
 
 <details>
-<summary>what rustc sees my website as</summary>
+<summary>What `rustc` sees my website as</summary>
 
 ```rust
 compression::internal::WithCompression<impl (Fn(compression::internal::CompressionProps) -> Response<Body>) + std::marker::Copy, warp::filter::recover::Recover<warp::filter::or::Or<warp::filter::or::Or<BoxedFilter<(impl Reply,)>, warp::filter::or::Or<warp::filter::or::Or<warp::filter::and::And<warp::filter::untuple_one::UntupleOne<warp::filter::map::Map<warp::filter::and::And<impl warp::Filter + warp::filter::FilterBase<Extract = (), Error = Infallible> + std::marker::Copy, impl warp::Filter + warp::filter::FilterBase<Extract = (Option<std::net::SocketAddr>,), Error = Infallible> + std::marker::Copy>, {closure@src/routes.rs:17:14: 17:45}>>, warp::filter::then::Then<impl warp::Filter + warp::filter::FilterBase<Extract = (), Error = Rejection> + std::marker::Copy, fn() -> impl Future<Output = impl Reply> {index::page}>>, warp::filter::then::Then<Exact<warp::path::internal::Opaque<&str>>, fn() -> impl Future<Output = impl Reply> {projects::page}>>, warp::filter::and::And<Exact<warp::path::internal::Opaque<&str>>, warp::filter::or::Or<warp::filter::then::Then<impl warp::Filter + warp::filter::FilterBase<Extract = (), Error = Rejection> + std::marker::Copy, fn() -> impl Future<Output = impl Reply> {listing}>, warp::filter::and_then::AndThen<impl warp::Filter + warp::filter::FilterBase<Extract = (String,), Error = Rejection> + std::marker::Copy, fn(String) -> impl Future<Output = Result<impl Reply, Rejection>> {posts::post}>>>>>, warp::filter::then::Then<Exact<warp::path::internal::Opaque<&str>>, fn() -> impl Future<Output = impl Reply> {personal::page}>>, fn(Rejection) -> impl Future<Output = Result<impl Reply, Rejection>> {handle}>>
@@ -41,77 +40,78 @@ compression::internal::WithCompression<impl (Fn(compression::internal::Compressi
 
 </details>
 
-using types for routing has a lot of benefits, especially within the context of the rust type system.
-it lets you get compile-time checking for routes, type checked refactors,
-and there's also no room for invalid states.
-every request either pattern matches into the site, or gets rejected.
+Using types for routing has a lot of benefits, especially within the context
+of the rust type system. It lets you get compile-time checking for routes, type
+checked refactors, and there's also no room for invalid states, every request
+either pattern matches into the site, or gets rejected.
 
-## templating
+## Templating
 
-i went with askama as my templating engine, but i'm also not happy with askama.
+I went with askama as my templating engine, but i'm not happy with it because:
 
-it takes a while to compile templates,
-its syntax is based on jinja (derogatory; reminds me of python)
-and has a bunch of features i don't need, like:
+- It takes a while to compile templates,
+- Its syntax is based on jinja (derogatory; reminds me of python)
+- It has a bunch of features I don't want or need, such as:
+  - Filters
+  - Inheritance
+  - Custom syntax for control structures
+  - Runtime template variables
+  - ...and a bunch of other stuff
 
-- filters
-- inheritance
-- custom syntax for control structures
-- runtime template variables
-- ...and a bunch of other stuff
+I looked at some other templating libraries, but most of them were either too
+complicated, had weird macro DSL's, or just had too many features.
 
-i looked at some other templating libraries, but most of them either:
+### Custom templating engine
 
-- were too complicated
-- had weird macro dsl's
-- had too many features
-
-### custom templating engine
-
-i'm planning on writing my own templating engine, but i haven't implemented it yet.
+I'm planning on writing my own templating engine, but i haven't implemented it yet.
 the general idea is:
 
-each section (page content, styles, metadata, etc) is a "node", which can be nested into other nodes.
-at compile-time, build a [directed acyclic graph](https://en.wikipedia.org/wiki/Directed_acyclic_graph) of all the nodes, and compile from the leaves up to the root.
-this gives me declarative & simple templating, without any extra stuff.
-if i want dynamic logic, i can just run it at compile time and insert it into the template.
-pure rust, no macros, dsls, or features i don't want or need. just string interpolation.
+Each section (page content, styles, metadata, etc) is a "node", which can be nested into other nodes.
+At compile-time, it will build a [DAG](https://en.wikipedia.org/wiki/Directed_acyclic_graph) of all the nodes,
+and compile from the leaves up to the root.
 
-<small>i would make a visual, but i just don't want to.. sorry!</small>
+This gives me declarative & simple templating, without any extra features.
+If I want dynamic logic, I can just run it at compile time and insert it into the template.
+It can easily be implemented as pure Rust with simple string interpolation,
+without any macros, DSL's, or features I don't want or need.
 
-## the markdown pipeline
+<small>I would make a visual, but I don't want to.. sorry!</small>
 
-my pipeline for markdown rendering is pretty simple:
+## Markdown pipeline
 
-1. transform the markdown into `impl Iterator<Item = Event>` (w/ [pulldown-cmark](https://crates.io/crates/pulldown-cmark))
-1. do some processing on the iterator, which allows for stuff like:
-   - syntax highlighting
-   - self-anchoring headers
-   - table of contents
-   - and basically anything else that i can do with an `impl Iterator<Item = Event>`
-1. transform the iterator into HTML
+My pipeline for markdown rendering is pretty simple:
 
-the logic for parsing posts is in [build/posts.rs](https://github.com/CelestialCrafter/celestials-closet/blob/master/build/posts.rs),
-except for the highlighting code that lives in [build/highlighting.rs](https://github.com/CelestialCrafter/celestials-closet/blob/master/build/highlighting.rs)
+1. Transform the markdown into `impl Iterator<Item = Event>` (w/ [pulldown-cmark](https://crates.io/crates/pulldown-cmark)).
+1. Do some processing on the iterator, which allows for stuff like:
+   - Syntax highlighting
+   - Self-anchoring headers
+   - Table of contents
+   - And basically anything else that I can do with an `impl Iterator<Item = Event>`
+1. Transform the iterator into HTML
 
-### syntax highlighting ft. treesitter
+The logic for parsing posts is in [build/posts.rs](https://github.com/CelestialCrafter/celestials-closet/blob/master/build/posts.rs),
+except for the highlighting code, which lives in [build/highlighting.rs](https://github.com/CelestialCrafter/celestials-closet/blob/master/build/highlighting.rs)
 
-the easiest way would've been to just include a javascript library like [highlight.js](https://highlightjs.org/) or [Prism.js](https://prismjs.com/), but i want to keep javascript to a minimum.
+### Syntax highlighting ft. Treesitter
 
-i considered [syntect](https://crates.io/crates/syntect), but didn't use it because
-syntect uses sublime syntax definitions, which look excruciating to write, and i don't use sublime text.
+The easiest way to do syntax highlighting would've been to just include a JavaScript library like
+[highlight.js](https://highlightjs.org/) or [Prism.js](https://prismjs.com/),
+but I wanted to keep JavaScript to a minimum.
 
-since i use neovim as my editor, i considered (and ended up using) [tree-sitter](https://tree-sitter.github.io/) because:
+I considered [syntect](https://crates.io/crates/syntect), but didn't use it
+because it uses sublime syntax definitions, which look excruciating to write,
+and I don't use sublime text.
 
-- from using it in neovim and helix, it's *really* pleasant
-- there's a big [list of parsers](https://github.com/tree-sitter/tree-sitter/wiki/List-of-parsers), so any language i want to use should work.
-- tree-sitter's api seems a lot simpler to use than syntect's
-- it's *really* fast
+Since I use neovim as my editor, I considered (and ended up using) [tree-sitter](https://tree-sitter.github.io/) because:
 
-the actual crate i ended up using is [tree-sitter-highlight](https://crates.io/crates/tree-sitter-highlight).
-i got the highlight names from running `:help treesitter-highlight-groups` in neovim and adapting the groups to my use case.
+- From using it in NeoVim and Helix, it's very fast and accurate
+- There's a big [list of parsers](https://github.com/tree-sitter/tree-sitter/wiki/List-of-parsers), so any language I want to use should work.
+- Tree-sitter's api seems a lot simpler to use than syntect's
 
-now that we have our highlight groups set up,
+The actual crate I ended up using is [tree-sitter-highlight](https://crates.io/crates/tree-sitter-highlight).
+I got the highlight names from running `:help treesitter-highlight-groups` in NeoVim and adapting the groups to my use case.
+
+Now that we have our highlight groups set up,
 we can start highlighting, iterate over the highlights,
 and generate html that gets fed back into the markdown parser:
 
@@ -143,10 +143,10 @@ for event in highlights.map(|e| {
 Ok(html)
 ```
 
-this iterates over the highlights, and spits out the colored source code.
+This iterates over the highlights, and outputs out the colored source code.
 
 <details>
-<summary>sample highlighting output</summary>
+<summary>Sample highlighting output</summary>
 
 ```html
 <pre><code class="language-rust"><span class="keyword">fn</span> <span class="function">main</span><span class="punctuation">(</span><span class="punctuation">)</span> <span class="punctuation">{</span>
@@ -156,59 +156,64 @@ this iterates over the highlights, and spits out the colored source code.
 
 </details>
 
-## embedding everything into the binary
+## Embedding everything into the binary
 
-using rust's [build scripts](https://doc.rust-lang.org/cargo/reference/build-scripts.html),
-i was able to pack all of the assets and posts into one binary.
+Using Rust's [build scripts](https://doc.rust-lang.org/cargo/reference/build-scripts.html),
+I was able to pack all of the assets and posts into one binary.
 
-i did this because:
+I did this because:
 
-- none of the assets or posts change often
-- a single binary is easier than managing 15+ assets
-- filesystem calls are fallible and more expensive than ram
-- it was fun :3
+- None of the assets or posts change often
+- A single binary is easier than managing 15+ assets
+- Filesystem calls are fallible and more expensive than ram
+- It was fun :3
 
-anyways, i used the build script to do post processing and asset handling,
-then the final .rs files get dumped into the website via `include!(concat!(env!("OUT_DIR"), "file.rs"))`
+Anyways, I used the build script to do post processing and asset handling,
+and then the final .rs files get dumped into the website via `include!(concat!(env!("OUT_DIR"), "file.rs"))`
 
-if i did (i may) rewrite the build pipeline in the future,
-i'd keep the build scripts for post creation/asset handling,
+If I do rewrite the build pipeline in the future,
+I'd keep the build scripts for post creation/asset handling,
 but use [include_bytes](https://doc.rust-lang.org/std/macro.include_bytes.html) for the data,
 and then using [proc macros](https://doc.rust-lang.org/reference/procedural-macros.html),
-i can include a hashmap of all posts and assets.
+I can include a hashmap of all posts and assets.
 
-### asset optimization
+### Asset optimization
 
-since i'm packing all of the assets into the binary,
-i need to optimize them a bit before packing them in.
+Since I'm packing all of the assets into the binary,
+I need to optimize them a bit before packing them in.
 
-i wasn't very aggressive on optimization, i only did:
+I wasn't very aggressive with optimization, I only:
 
-- conversion to lossless [webp](https://developers.google.com/speed/webp)
-- resizing images to the displayed size (excluding project preview images)
+- Converted the images to lossless [WebP](https://developers.google.com/speed/webp)
+- Resizing images to the displayed size (excluding project preview images)
 
-i used to handle the image optimization manually,
-but it was time consuming and destructive to the original assets
+I used to handle the image optimization manually, but it was time consuming
+and destructive to the original assets, so I needed different transforms on
+some assets.
 
-i needed different transforms on some assets,
-so i opted for using optimization levels (unchanged, webp, webp + resize).
+I opted to define optimization levels (such as unchanged, webp, webp resize),
+and then i can simply parse the optimization levels in my build pipeline, and
+transform the assets as needed.
+
+<details>
+<summary>Example of optimization levels on assets</summary>
 
 ```
-ado.jpg.opt-2              mimosa-confessions.jpg.opt-2
-beabadoobee.jpg.opt-2      needy-streamer-overload.png.opt-2
-bocchi-the-rock.jpg.opt-2  nier-automata.jpg.opt-2
-dotfiles-1.webp.opt-1      niki.jpg.opt-2
-dotfiles-2.webp.opt-1      oshi-no-ko.webp.opt-2
-ed25519.txt.opt-0          persona-5-royal.jpg.opt-2
-frieren.webp.opt-2         profile.jpg.opt-2
-girls-band-cry.jpg.opt-2   witch-hat-atlier.jpg.opt-2
-inabakumori.jpg.opt-2      yorushika.png.opt-2
-iyowa.jpg.opt-2            zutomayo.jpg.opt-2
-lycoris-recoil.jpg.opt-2
+bocchi-the-rock.jpg.opt-2         kessoku-band.jpg.opt-2
+celestial-ed25519.pub.opt-0       lycoris-recoil.jpg.opt-2
+cosmic-princess-kaguya.jpg.opt-2  makeine.png.opt-2
+deco-27.jpg.opt-2                 natori.jpg.opt-2
+dotfiles-1.webp.opt-1             niki.jpg.opt-2
+dotfiles-2.webp.opt-1             oshi-no-ko.webp.opt-2
+frieren.jpg.opt-2                 profile.jpg.opt-2
+girls-band-cry.jpg.opt-2          quicksand.woff2.opt-0
+hikaru.webp.opt-2                 takopi.webp.opt-2
+inabakumori.jpg.opt-2             witch-hat-atlier.jpg.opt-2
+iyowa.jpg.opt-2                   yorushika.png.opt-2
+jetbrains-mono.woff2.opt-0        zutomayo.jpg.opt-2
 ```
 
-from there, i can simply parse the optimization levels in my build pipeline,
-and transform the assets as needed:
+</details>
 
 ```rust
 match opt_level {
@@ -232,16 +237,17 @@ match opt_level {
 }
 ```
 
-### how does it affect file size?
+### How does it affect file size?
 
-the size of the binary is 5.8MB, and if we want to find out how much of that is assets,
-we can look through the binary itself!
+At the time of writing, the size of the binary is ~5.8MB, and if we want to find
+out how much of that is assets, we can look through the binary itself.
 
-from the [specification](https://developers.google.com/speed/webp/docs/riff_container#webp_file_header),
-the file size for WebP is sandwiched in between `RIFF` and `WEBP` as a little-endian u32.
-<small> this does mean we will only be searching for webp (ignoring non-image assets and markdown), but images are the biggest.</small>
+From the [specification](https://developers.google.com/speed/webp/docs/riff_container#webp_file_header),
+the file size for WebP is placed in between `RIFF` and `WEBP` as a little-endian u32.
+<small>This does mean we will only be searching for webp (ignoring non-image
+assets and markdown), but images are the biggest.</small>
 
-since we will be searching through a hexdump of the binary,
+Since we will be searching through a hexdump of the binary,
 we'll need to make a script that converts big-endian hex to little-endian decimal:
 
 ```lua
@@ -266,7 +272,7 @@ for hex in io.lines() do
 end
 ```
 
-now, we can use a little shell scripting to get our result:
+Now, we can use a little bit of shell scripting to get our result:
 
 ```fish
 # hexdump of the binary
@@ -281,71 +287,25 @@ xxd -ps target/release/celestials-closet | \
     awk '{sum+=$1} END {print sum}'
 ```
 
-and at the time of writing, this outputs `888632`, or 888KB out of 5912KB (or ~15%).
+And at the time of writing, this outputs `888632`, or 888KB out of 5912KB (or ~15%).
 
-## custom data format
+## Deployment
 
-i put this last because it doesn't exist anymore,
-but i originally created a comment/views system with a hand-rolled binary format..
-and then scrapped it because opening up an unrestricted comment box to the entire internet sounds like an awful idea.
+By default (assuming a `x86_64-unknown-linux-gnu` target), Rust dynamically
+*links to glibc. but* I can produce a statically linked binary by changing the
+\*build target to [musl](https://www.musl-libc.org/).
 
-here's the layout of the data format:
+Statically linking the binary solves a few portability concerns:
 
-```
-1 byte header
-    - ip type = bit 8 (0 for ipv4, and 1 for ipv6)
-    - name length = bit 1 to 7 (0 for no message)
+- No `pkg-config`, extra libraries to install, or dealing with different
+  platforms having differently versioned libraries
+- No dealing with `patchelf` from binaries built on NixOS
 
-if ipv4:
-    ip = read out 4 bytes
-if ipv6:
-    ip = read out 16 bytes
+With the trade-off being (slightly) bigger binaries (and some other things, which I won't go into here).
+but I'm already packing like 20 images inside of the binary,
+so statically linking a few more libraries shouldn't make too much of a difference.
 
-if name length > 0:
-    content length = read out 1 byte
-    name = read out <name length> bytes
-    content = read out <content length> bytes
-```
-
-of course, i forgot to add a few version bits in the header.
-here's a sample packet, binary dumped w/ `xxd -b`:
-
-```
-00000000: 00001001 01111111 00000000 00000000 00000001 00001101  ......
-00000006: 01100011 01100101 01101100 01100101 01110011 01110100  celest
-0000000c: 01101001 01100001 01101100 01110100 01100101 01110011  ialtes
-00000012: 01110100 00100000 01101101 01100101 01110011 01110011  t mess
-00000018: 01100001 01100111 01100101 00100001                    age!
-```
-
-sample packet decoded:
-
-```
-00001001 -> header
-    - bit 8 (ip type): ip type = ipv4
-    - bit 1-7: name length = 9
-01111111 00000000 00000000 00000001 -> ip = 127.0.0.1
-00001101 -> content length = 13
-the rest -> name, and then content
-```
-
-[source code](https://github.com/CelestialCrafter/celestials-closet/blob/c45cc37ee2e688be766d00bec4ec0621435fc036/src/database.rs)
-
-## deployment
-
-by default (assuming a `x86_64-unknown-linux-gnu` target), rust dynamically links to glibc.
-*but* i can produce a statically linked binary by changing the build target to [musl](https://www.musl-libc.org/).
-
-statically linking the binary solves a few portability concerns:
-
-- no pkg-config, extra libraries to install, or dealing with different platforms having differently versioned libraries
-- no dealing with patchelf from binaries built on nix
-
-with the trade-off being (slightly) bigger binaries (and some other things, which i won't go into here).
-but i'm already packing like 20 images inside of the binary,
-so statically linking a few more libraries shouldn't make *too* much of a difference.
-
-anyways, since i use nix as my build system, i can easily cross-compile to aarch64 and x86_64:
+Anyways, since I use nix as my build system, I can easily cross-compile to `aarch64`:
 
 ```nix
 {
@@ -374,38 +334,53 @@ anyways, since i use nix as my build system, i can easily cross-compile to aarch
 }
 ```
 
-thanks for reading! \<3
+## Custom data format
 
-## @TODO
+I put this last because it doesn't exist anymore, but I originally created a
+comment/views system with a hand-rolled binary format, and then scrapped it
+because opening up an unrestricted comment box sounds like a bad idea.
 
-things i still need to do.
+The layout of the data format is something similar to this:
 
-this is mainly a reference for future me, but read through it if you want!
+```
+1 byte header
+    - ip type = bit 8 (0 for ipv4, and 1 for ipv6)
+    - name length = bit 1 to 7 (0 for no message)
 
-### table of contents
+if ipv4:
+    ip = read out 4 bytes
+if ipv6:
+    ip = read out 16 bytes
 
-i'm already able to inject into the markdown processing pipeline,
-so this shouldn't be too hard.
+if name length > 0:
+    content length = read out 1 byte
+    name = read out <name length> bytes
+    content = read out <content length> bytes
+```
 
-### dates and change ids
+And of course, I forgot to add a byte for the version in the header.
 
-for dates, i want:
+Here's a sample packet, binary dumped w/ `xxd -b`:
 
-- publish date/publish change id
-- latest revision date/latest revision change id
+```xxd
+00000000: 00001001 01111111 00000000 00000000 00000001 00001101  ......
+00000006: 01100011 01100101 01101100 01100101 01110011 01110100  celest
+0000000c: 01101001 01100001 01101100 01110100 01100101 01110011  ialtes
+00000012: 01110100 00100000 01101101 01100101 01110011 01110011  t mess
+00000018: 01100001 01100111 01100101 00100001                    age!
+```
 
-when i implemented this in the past, there were a few issues:
+Sample packet decoded:
 
-if i use the [jujutsu](https://jj-vcs.github.io/jj/) library, the compile times are insufferably long.
-and if i use the jj cli, parsing the output feels really wrong and unstable,
-even though it's probably not.
+```
+00001001 -> header
+    - bit 8 (ip type): ip type = ipv4
+    - bit 1-7: name length = 9
+01111111 00000000 00000000 00000001 -> ip = 127.0.0.1
+00001101 -> content length = 13
+the rest -> name, and then content
+```
 
-### lang/origin in codeblocks
+[source code](https://github.com/CelestialCrafter/celestials-closet/blob/c45cc37ee2e688be766d00bec4ec0621435fc036/src/database.rs)
 
-again, more markdown parsing stuff.
-i'd probably implement this via doing some custom parsing in the language codeblocks.
-
-### misc
-
-- 404 page
-- [custom templating engine](#custom-templating-engine)
+Thanks for reading! \<3

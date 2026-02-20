@@ -1,6 +1,6 @@
 ---
-title = "markdown test"
-summary = "summary for markdown test blah blah blah"
+title = "Markdown Test"
+summary = "Summary for markdown test blah blah blah."
 date = 2025-04-10
 id = "md-test"
 ---

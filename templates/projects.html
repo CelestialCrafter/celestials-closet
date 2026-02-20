@@ -1,20 +1,20 @@
 {% extends "base.html" %}
 
 {% block head %}
-<title>cel's closet - projects</title>
-<meta name="description" content="my projects!">
+<title>Celestial's Closet - Projects</title>
+<meta name="description" content="All of my projects!">
 <style>{{grass::include!("styles/projects.scss")|safe}}</style>
 {% endblock %}
 
 {% block body %}
-<h1>projects</h1>
+<h1>Projects</h1>
 {% for project in projects %}
 <div>
 	<a href="{{project.url}}"><h2>{{project.title}}</h2></a>
 	<p>
 		{{project.description}}<br />
 		{% if project.language.known() %}
-		<small>made w/ {{format!("{}", project.language)}}</small>
+		<small>Made w/ {{format!("{}", project.language)}}</small>
 		{% endif %}
 	</p>
 	{% if !project.images.is_empty() %}
