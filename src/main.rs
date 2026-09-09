@@ -13,8 +13,8 @@ async fn main() {
         .parse_filters(ARGS.log.as_str())
         .init();
 
-    // serve
     let host = SocketAddr::from(([0, 0, 0, 0], ARGS.port));
     info!("listening on {host}");
+
     warp::serve(routes::routes()).run(host).await;
 }

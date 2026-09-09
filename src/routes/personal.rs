@@ -52,13 +52,13 @@ async fn page() -> impl Reply {
                     url: "https://natori-official.com/",
                 },
                 Resource {
-                    title: "DECO*27",
-                    image: "/assets/deco-27.webp",
+                    title: "Atarayo",
+                    image: "/assets/atarayo.webp",
                     url: "https://otoiro.co.jp/creator/deco27/",
                 },
                 Resource {
-                    title: "NIKI",
-                    image: "/assets/niki.webp",
+                    title: "r-906",
+                    image: "/assets/r-906.webp",
                     url: "https://nikizefanya.com/",
                 },
                 Resource {
@@ -99,19 +99,9 @@ async fn page() -> impl Reply {
                     url: "https://ichigoproduction.com/",
                 },
                 Resource {
-                    title: "Takopi's Original Sin",
-                    image: "/assets/takopi.webp",
-                    url: "https://www.tbs.co.jp/anime/takopi_project",
-                },
-                Resource {
-                    title: "Makeine",
-                    image: "/assets/makeine.webp",
-                    url: "https://makeine-anime.com/",
-                },
-                Resource {
-                    title: "The Summer Hikaru Died",
-                    image: "/assets/hikaru.webp",
-                    url: "https://hikanatsu-anime.com/",
+                    title: "Watanare",
+                    image: "/assets/watanare.webp",
+                    url: "https://www.watanare-anime.com/",
                 },
                 Resource {
                     title: "Cosmic Princess Kaguya",

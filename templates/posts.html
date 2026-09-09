@@ -6,12 +6,12 @@
 {% endblock %}
 
 {% block body %}
-<h1>Posts</h1>
+<h1>posts</h1>
 {% for post in posts %}
 <div>
 	<h2><a href="/posts/{{post.id}}">{{post.title}}</a></h2>
 	<p>{{post.summary}}</p>
-	<small>Created at <time datetime="{{post.date}}">{{post.date}}</time></small>
+	<small>created at <time datetime="{{post.date}}">{{post.date}}</time></small>
 </div>
 {% endfor %}
 {% endblock %}

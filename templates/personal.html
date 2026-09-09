@@ -1,43 +1,43 @@
-{% extends "base.html" %}
-
-{% block head %}
+{% extends "base.html" %} {% block head %}
 <title>Celestial's Closet - Personal</title>
-<meta name="description" content="Stuff about me! <3">
-<style>{{grass::include!("styles/personal.scss")|safe}}</style>
-{% endblock %}
+<meta name="description" content="stuff about me! <3" />
+<style>
+  {{grass::include!("styles/personal.scss")|safe}}
+</style>
+{% endblock %} {% block body %}
+<h1>personal</h1>
 
-{% block body %}
-<h1>Personal</h1>
-
-<h2 id="development">Software Development</h2>
+<h2 id="development">software development</h2>
 <p>
-	I've been programming since 2016, and I'm mainly interested in Rust & Linux.<br>
-	Other than that, I also like Lua, Networking, Hardware, and Operating Systems.<br>
+  i've been programming since around 2016, and am mainly interested in rust &
+  linux.<br />
+  other programming things i'm interested include: programming langauges,
+  networking, systems engineering, and a lot more.
 </p>
 
-<h2 id="music">Music</h2>
+<h2 id="music">music</h2>
 
 <div class="grid">
-	{% for entry in music %}
-	<a href="{{entry.url}}">
-		<figure>
-			<img src="{{entry.image}}" alt="{{entry.title}}">
-			<figcaption>{{entry.title}}</figcaption>
-		</figure>
-	</a>
-	{% endfor %}
+  {% for entry in music %}
+  <a href="{{entry.url}}">
+    <figure>
+      <img src="{{entry.image}}" alt="{{entry.title}}" />
+      <figcaption>{{entry.title}}</figcaption>
+    </figure>
+  </a>
+  {% endfor %}
 </div>
 
-<h2 id="anime-manga">Anime/Manga</h2>
+<h2 id="anime-manga">anime/manga</h2>
 
 <div class="grid">
-	{% for entry in anime_manga %}
-	<a href="{{entry.url}}">
-		<figure>
-			<img src="{{entry.image}}" alt="{{entry.title}}">
-			<figcaption>{{entry.title}}</figcaption>
-		</figure>
-	</a>
-	{% endfor %}
+  {% for entry in anime_manga %}
+  <a href="{{entry.url}}">
+    <figure>
+      <img src="{{entry.image}}" alt="{{entry.title}}" />
+      <figcaption>{{entry.title}}</figcaption>
+    </figure>
+  </a>
+  {% endfor %}
 </div>
 {% endblock %}

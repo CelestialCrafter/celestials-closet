@@ -120,7 +120,7 @@ fn highlight_code<'a>(
     config: &HighlightConfiguration,
     code: &str,
 ) -> Result<String> {
-    let highlights = highlighter.highlight(config, code.as_bytes(), None, |_| None)?;
+    let highlights = highlighter.highlight(config, code.as_bytes(), None, None, |_| None)?;
 
     let mut html = String::with_capacity(code.len());
 

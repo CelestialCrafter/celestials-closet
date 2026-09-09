@@ -9,7 +9,7 @@
 {% block body %}
 <h1>{{post.title}}</h1>
 <p>{{post.summary}}</p>
-<small>Created at <time datetime="{{post.date}}">{{post.date}}</time></small>
+<small>created at <time datetime="{{post.date}}">{{post.date}}</time></small>
 
 <div id="content">
 {{ post.html|safe }}

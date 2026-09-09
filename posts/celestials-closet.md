@@ -1,5 +1,5 @@
 ---
-title = "Building my Website!"
+title = "Building my website!"
 summary = "Going over my website's features, and how I built them."
 date = 2025-04-10
 id = "celestials-closet"
@@ -42,12 +42,11 @@ compression::internal::WithCompression<impl (Fn(compression::internal::Compressi
 
 Using types for routing has a lot of benefits, especially within the context
 of the rust type system. It lets you get compile-time checking for routes, type
-checked refactors, and there's also no room for invalid states, every request
-either pattern matches into the site, or gets rejected.
+checked refactors, and simple route composition.
 
 ## Templating
 
-I went with askama as my templating engine, but i'm not happy with it because:
+I went with askama as my templating engine, but I'm not happy with it for a few reasons:
 
 - It takes a while to compile templates,
 - Its syntax is based on jinja (derogatory; reminds me of python)
@@ -58,8 +57,7 @@ I went with askama as my templating engine, but i'm not happy with it because:
   - Runtime template variables
   - ...and a bunch of other stuff
 
-I looked at some other templating libraries, but most of them were either too
-complicated, had weird macro DSL's, or just had too many features.
+I looked at some other templating libraries, but most of them were either too complicated, had weird macro DSL's, or just had too many features.
 
 ### Custom templating engine
 
@@ -72,8 +70,7 @@ and compile from the leaves up to the root.
 
 This gives me declarative & simple templating, without any extra features.
 If I want dynamic logic, I can just run it at compile time and insert it into the template.
-It can easily be implemented as pure Rust with simple string interpolation,
-without any macros, DSL's, or features I don't want or need.
+It can easily be implemented as pure Rust with simple string interpolation, without any macros, DSL's, or features I don't want or need.
 
 <small>I would make a visual, but I don't want to.. sorry!</small>
 
@@ -92,7 +89,7 @@ My pipeline for markdown rendering is pretty simple:
 The logic for parsing posts is in [build/posts.rs](https://github.com/CelestialCrafter/celestials-closet/blob/master/build/posts.rs),
 except for the highlighting code, which lives in [build/highlighting.rs](https://github.com/CelestialCrafter/celestials-closet/blob/master/build/highlighting.rs)
 
-### Syntax highlighting ft. Treesitter
+### Syntax highlighting w/ Treesitter
 
 The easiest way to do syntax highlighting would've been to just include a JavaScript library like
 [highlight.js](https://highlightjs.org/) or [Prism.js](https://prismjs.com/),
